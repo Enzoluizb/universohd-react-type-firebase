@@ -1,10 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
     <App />
-  </StrictMode>,
-)
+  </React.StrictMode>,
+);
+
+export default function Home() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <h1 className="text-4xl font-bold text-white">
+        Tailwind 3 funcionando 🚀
+      </h1>
+    </div>
+  );
+}

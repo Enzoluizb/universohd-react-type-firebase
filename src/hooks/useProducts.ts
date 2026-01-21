@@ -15,15 +15,7 @@ export function useProducts() {
     async function create() {
         if (!title.trim()) return;
 
-        await createProduct({
-            title,
-            description: "Produto teste",
-            whatsapp: "5547999999999",
-            active: true,
-            createdAt: Date.now(),
-            ownerId: "user_test_1",
-        });
-
+        await createProduct({ title });
         setTitle("");
     }
 

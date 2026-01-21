@@ -1,4 +1,4 @@
-export interface Product {
+export type Product = {
     id?: string;
     title: string;
     description: string;
@@ -6,4 +6,4 @@ export interface Product {
     active: boolean;
     createdAt: number;
     ownerId: string;
-}
+};

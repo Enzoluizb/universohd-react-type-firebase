@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
+import type { Product } from "../types/Product";
+import EditProductModal from "../components/marketplace/EditProductModal";
 
 export default function Marketplace() {
   const { products, title, setTitle, create, remove, toggleActive } =
     useProducts();
+
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
@@ -47,10 +52,23 @@ export default function Marketplace() {
               >
                 Excluir
               </button>
+
+              <button
+                onClick={() => setEditingProduct(product)}
+                className="px-3 py-1 bg-blue-600 text-white"
+              >
+                Editar
+              </button>
             </div>
           </li>
         ))}
       </ul>
+      {editingProduct && (
+        <EditProductModal
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+        />
+      )}
     </div>
   );
 }

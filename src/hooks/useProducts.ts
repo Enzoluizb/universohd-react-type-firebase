@@ -1,45 +1,51 @@
 import { useEffect, useState } from "react";
 import {
-    createProduct,
-    deleteProduct,
-    toggleProductActive,
-    subscribeProducts,
+  createProduct,
+  deleteProduct,
+  toggleProductActive,
+  subscribeProducts,
+  editProduct,
 } from "../services/products";
 
 import type { Product } from "../types/Product";
 
 export function useProducts() {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [title, setTitle] = useState("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [title, setTitle] = useState("");
 
-    async function create() {
-        if (!title.trim()) return;
+  async function create() {
+    if (!title.trim()) return;
 
-        await createProduct({ title });
-        setTitle("");
-    }
+    await createProduct({ title });
+    setTitle("");
+  }
 
-    async function remove(id?: string) {
-        if (!id) return;
-        await deleteProduct(id);
-    }
+  async function updateProduct(id: string, data: Partial<Product>) {
+    await editProduct(id, data);
+  }
 
-    async function toggleActive(product: Product) {
-        if (!product.id) return;
-        await toggleProductActive(product.id, !product.active);
-    }
+  async function remove(id?: string) {
+    if (!id) return;
+    await deleteProduct(id);
+  }
 
-    useEffect(() => {
-        const unsubscribe = subscribeProducts(setProducts);
-        return () => unsubscribe();
-    }, []);
+  async function toggleActive(product: Product) {
+    if (!product.id) return;
+    await toggleProductActive(product.id, !product.active);
+  }
 
-    return {
-        products,
-        title,
-        setTitle,
-        create,
-        remove,
-        toggleActive,
-    };
+  useEffect(() => {
+    const unsubscribe = subscribeProducts(setProducts);
+    return () => unsubscribe();
+  }, []);
+
+  return {
+    products,
+    title,
+    setTitle,
+    create,
+    remove,
+    toggleActive,
+    updateProduct,
+  };
 }

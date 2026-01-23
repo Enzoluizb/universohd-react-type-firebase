@@ -1,11 +1,13 @@
 import Hero from "../components/landing/Hero";
-import AboutAndressa from "../components/landing/AboutSection";
+import AboutSection from "../components/landing/AboutSection";
+import CleanHDSection from "../components/landing/CleanHDSection";
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Hero />
-      <AboutAndressa />
-    </main>
+      <AboutSection />
+      <CleanHDSection />
+    </>
   );
 }

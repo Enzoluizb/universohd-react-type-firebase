@@ -3,6 +3,7 @@ import AboutSection from "../components/landing/AboutSection";
 import CleanHDSection from "../components/landing/CleanHDSection";
 import CoursesSection from "../components/landing/CoursesSection";
 import AvaliacoesSection from "../components/avaliacoes/AvaliacoesSection";
+import CardsInstagram from "../components/landing/CardsInstagram";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <CleanHDSection />
       <CoursesSection />
       <AvaliacoesSection />
+      <CardsInstagram />
     </>
   );
 }

@@ -2,20 +2,22 @@ import { Link } from "react-router-dom";
 
 export default function CoursesSection() {
   return (
-    <section className="py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-10">
+    <section className="py-8 sm:py-14">
+      <div className="mx-auto max-w-8xl px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {/* ALUNA HD */}
-          <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col max-w-md mx-auto">
+          <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col">
             <img
               src="/images/AlunaHD.jpeg"
               alt="Aluna HD"
               className="h-56 w-full object-cover"
             />
+
             <div className="p-6 flex flex-col flex-1">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Curso de Pintura Criativa em Madeira – Aluna HD
               </h3>
+
               <p className="text-gray-700 text-sm flex-1">
                 Seja Aluna HD e tenha acesso a mais de 350 aulas!
               </p>

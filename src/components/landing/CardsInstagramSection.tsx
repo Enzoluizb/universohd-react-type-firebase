@@ -1,6 +1,6 @@
 export default function CardsInstagram() {
   return (
-    <section className="bg-[#e3e1e6] py-16">
+    <section className="py-16">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-8 md:grid-cols-2">
           {/* CARD 1 */}

@@ -2,7 +2,7 @@ import AvaliacoesCarousel from "./AvaliacoesCarousel";
 
 export default function AvaliacoesSection() {
   return (
-    <section className="min-w-screen bg-[#e3e1e6] border-t border-b border-gray-400 px-5 py-16 md:py-24 text-gray-800">
+    <section className="min-w-screen border-t border-b border-gray-400 px-5 py-16 md:py-24 text-gray-800">
       <div className="w-full max-w-6xl mx-auto">
         <div className="text-center max-w-xl mx-auto">
           <h1 className="text-6xl md:text-7xl font-bold mb-5 text-gray-600">

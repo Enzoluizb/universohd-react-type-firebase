@@ -2,30 +2,22 @@ import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
 import type { Product } from "../types/Product";
 import EditProductModal from "../components/marketplace/EditProductModal";
+import CreateProductModal from "../components/marketplace/CreateProductModal";
 
 export default function Marketplace() {
-  const { products, title, setTitle, create, remove, toggleActive } =
-    useProducts();
+  const { products, remove, toggleActive } = useProducts();
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
-        CRUD – Marketplace (Realtime Firebase)
-      </h1>
-
-      <div className="mb-6 flex gap-2">
-        <input
-          className="border p-2 flex-1"
-          placeholder="Nome do produto"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <button onClick={create} className="bg-blue-600 text-white px-4 py-2">
-          Criar
-        </button>
-      </div>
+      <button
+        onClick={() => setShowCreateModal(true)}
+        className="bg-green-600 text-white px-4 py-2 rounded"
+      >
+        Nova postagem
+      </button>
 
       <ul className="space-y-3">
         {products.map((product) => (
@@ -68,6 +60,10 @@ export default function Marketplace() {
           product={editingProduct}
           onClose={() => setEditingProduct(null)}
         />
+      )}
+
+      {showCreateModal && (
+        <CreateProductModal onClose={() => setShowCreateModal(false)} />
       )}
     </div>
   );

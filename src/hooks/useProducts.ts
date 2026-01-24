@@ -9,15 +9,26 @@ import {
 
 import type { Product } from "../types/Product";
 
+type CreateProductPostInput = {
+  title: string;
+  description: string;
+  whatsapp: string;
+  image?: File | null;
+};
+
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [title, setTitle] = useState("");
 
-  async function create() {
-    if (!title.trim()) return;
-
-    await createProduct({ title });
-    setTitle("");
+  async function createProductPost(data: CreateProductPostInput) {
+    await createProduct({
+      title: data.title,
+      description: data.description,
+      whatsapp: data.whatsapp,
+      active: true,
+      createdAt: Date.now(),
+      ownerId: "mock-user-id",
+      imageUrl: "",
+    });
   }
 
   async function updateProduct(id: string, data: Partial<Product>) {
@@ -41,11 +52,9 @@ export function useProducts() {
 
   return {
     products,
-    title,
-    setTitle,
-    create,
+    createProductPost,
+    updateProduct,
     remove,
     toggleActive,
-    updateProduct,
   };
 }

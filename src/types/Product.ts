@@ -3,6 +3,7 @@ export type Product = {
     title: string;
     description: string;
     whatsapp: string;
+    imageUrl?: string;
     active: boolean;
     createdAt: number;
     ownerId: string;

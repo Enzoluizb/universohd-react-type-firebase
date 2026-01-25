@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
 import type { Product } from "../types/Product";
+
 import EditProductModal from "../components/marketplace/EditProductModal";
 import CreateProductModal from "../components/marketplace/CreateProductModal";
+import ProductCard from "../components/marketplace/ProductCard";
 
 export default function Marketplace() {
   const { products, remove, toggleActive } = useProducts();
@@ -50,56 +52,13 @@ export default function Marketplace() {
       {/* GRID DE POSTS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product) => (
-          <div
+          <ProductCard
             key={product.id}
-            className="border rounded-lg p-4 flex flex-col justify-between shadow-sm"
-          >
-            <div>
-              {/* IMAGEM (placeholder por enquanto) */}
-              <div className="bg-gray-200 h-40 rounded mb-3" />
-
-              <h3 className="font-bold text-lg mb-1">{product.title}</h3>
-
-              <p className="text-sm text-gray-600 mb-2">
-                {product.description}
-              </p>
-
-              <p className="text-sm">
-                Status:{" "}
-                <span
-                  className={
-                    product.active ? "text-green-600" : "text-gray-400"
-                  }
-                >
-                  {product.active ? "Ativo" : "Inativo"}
-                </span>
-              </p>
-            </div>
-
-            {/* AÇÕES (admin por enquanto) */}
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={() => toggleActive(product)}
-                className="bg-yellow-500 text-white px-3 py-1 text-sm rounded"
-              >
-                Ativar/Inativar
-              </button>
-
-              <button
-                onClick={() => remove(product.id)}
-                className="bg-red-600 text-white px-3 py-1 text-sm rounded"
-              >
-                Excluir
-              </button>
-
-              <button
-                onClick={() => setEditingProduct(product)}
-                className="bg-blue-600 text-white px-3 py-1 text-sm rounded"
-              >
-                Editar
-              </button>
-            </div>
-          </div>
+            product={product}
+            onEdit={setEditingProduct}
+            onRemove={remove}
+            onToggleActive={toggleActive}
+          />
         ))}
       </div>
 

@@ -7,6 +7,7 @@ import {
   editProduct,
 } from "../services/products";
 
+import { uploadImage } from "../services/uploadImage";
 import type { Product } from "../types/Product";
 
 type CreateProductPostInput = {
@@ -20,14 +21,20 @@ export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
 
   async function createProductPost(data: CreateProductPostInput) {
+    let imageUrl = "";
+
+    if (data.image) {
+      imageUrl = await uploadImage(data.image);
+    }
+
     await createProduct({
       title: data.title,
       description: data.description,
       whatsapp: data.whatsapp,
+      imageUrl,
       active: true,
       createdAt: Date.now(),
       ownerId: "mock-user-id",
-      imageUrl: "",
     });
   }
 

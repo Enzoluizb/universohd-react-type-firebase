@@ -29,8 +29,16 @@ export default function ProductCard({
     <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm">
       <div>
         {/* IMAGEM */}
-        <div className="bg-gray-200 h-40 rounded mb-3" />
-
+        {/* IMAGEM */}
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.title}
+            className="h-40 w-full object-cover rounded mb-3"
+          />
+        ) : (
+          <div className="bg-gray-200 h-40 rounded mb-3" />
+        )}
         <h3 className="font-bold text-lg mb-1">{product.title}</h3>
 
         <p className="text-sm text-gray-600 mb-2">{product.description}</p>

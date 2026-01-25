@@ -16,14 +16,19 @@ export default function ProductCard({
   function handleAcquire() {
     if (!product.whatsapp) return;
 
-    const url = `https://wa.me/${product.whatsapp}`;
+    const message = `Olá, vi seu produto "${product.title}" no Site do UniversoHD e gostaria de saber mais informações.`;
+
+    const url = `https://wa.me/${product.whatsapp}?text=${encodeURIComponent(
+      message,
+    )}`;
+
     window.open(url, "_blank");
   }
 
   return (
     <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm">
       <div>
-        {/* IMAGEM (placeholder) */}
+        {/* IMAGEM */}
         <div className="bg-gray-200 h-40 rounded mb-3" />
 
         <h3 className="font-bold text-lg mb-1">{product.title}</h3>
@@ -40,17 +45,19 @@ export default function ProductCard({
 
       {/* AÇÕES */}
       <div className="flex flex-wrap gap-2 mt-4">
-        {/* QUERO ADQUIRIR */}
-        <button
-          onClick={handleAcquire}
-          className="
-            bg-green-600 hover:bg-green-700
-            text-white px-3 py-1 text-sm rounded
-            transition
-          "
-        >
-          Quero adquirir
-        </button>
+        {/* QUERO ADQUIRIR — só se ativo */}
+        {product.active && (
+          <button
+            onClick={handleAcquire}
+            className="
+              bg-green-600 hover:bg-green-700
+              text-white px-3 py-1 text-sm rounded
+              transition
+            "
+          >
+            Quero adquirir
+          </button>
+        )}
 
         <button
           onClick={() => onToggleActive(product)}

@@ -13,17 +13,24 @@ export default function ProductCard({
   onRemove,
   onToggleActive,
 }: Props) {
+  function handleAcquire() {
+    if (!product.whatsapp) return;
+
+    const url = `https://wa.me/${product.whatsapp}`;
+    window.open(url, "_blank");
+  }
+
   return (
     <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm">
       <div>
-        {/* IMAGEM (placeholder por enquanto) */}
+        {/* IMAGEM (placeholder) */}
         <div className="bg-gray-200 h-40 rounded mb-3" />
 
         <h3 className="font-bold text-lg mb-1">{product.title}</h3>
 
         <p className="text-sm text-gray-600 mb-2">{product.description}</p>
 
-        <p className="text-sm">
+        <p className="text-sm mb-1">
           Status:{" "}
           <span className={product.active ? "text-green-600" : "text-gray-400"}>
             {product.active ? "Ativo" : "Inativo"}
@@ -31,8 +38,20 @@ export default function ProductCard({
         </p>
       </div>
 
-      {/* AÇÕES (admin por enquanto) */}
-      <div className="flex gap-2 mt-4">
+      {/* AÇÕES */}
+      <div className="flex flex-wrap gap-2 mt-4">
+        {/* QUERO ADQUIRIR */}
+        <button
+          onClick={handleAcquire}
+          className="
+            bg-green-600 hover:bg-green-700
+            text-white px-3 py-1 text-sm rounded
+            transition
+          "
+        >
+          Quero adquirir
+        </button>
+
         <button
           onClick={() => onToggleActive(product)}
           className="bg-yellow-500 text-white px-3 py-1 text-sm rounded"

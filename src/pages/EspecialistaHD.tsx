@@ -115,24 +115,47 @@ export default function EspecialistaHD() {
         </div>
 
         {/* bloco final */}
-        <div className="bg-gray-900 text-white p-10 rounded-3xl shadow-xl text-center">
-          <blockquote className="text-xl italic font-medium mb-10 max-w-3xl mx-auto">
-            “Aproveite a oportunidade de se tornar uma Especialista HD.”
+        {/* bloco final */}
+        <div className="w-full p-10 shadow-xl rounded-3xl bg-white text-gray-800">
+          <div className="mb-8 pb-8 flex items-center border-b border-gray-200">
+            <img
+              src="/images/especialistaHDselo.png"
+              alt="Selo"
+              className="rounded-3xl w-20 h-20 bg-white object-contain p-2"
+            />
+            <div className="ml-5">
+              <span className="text-3xl font-semibold text-gray-900">
+                Especialista HD
+              </span>
+            </div>
+          </div>
+
+          <ul className="mb-10 font-medium text-xl">
+            <li className="flex items-start mb-6">
+              <span className="flex-shrink-0 w-6 h-6 bg-black rounded-full flex items-center justify-center mt-1">
+                <i className="fa-solid fa-check text-white text-xs" />
+              </span>
+              <span className="ml-4 text-left">
+                Selo Especialista HD - Suas peças serão vistas por milhares de
+                pessoas e você poderá comercializar através do portal
+                universoHD.com.br
+              </span>
+            </li>
+          </ul>
+
+          <blockquote className="text-xl italic font-semibold text-gray-900 mb-10 border-l-4 border-gray-400 pl-4">
+            “Aproveite a oportunidade de ser uma Especialista HD, não perca!”
           </blockquote>
 
           <a
             href="https://forms.gle/AEkhvKgwTtSRupSDA"
-            className="inline-flex items-center justify-center bg-white text-gray-900 hover:bg-gray-100 transition rounded-md px-8 py-4 text-lg font-semibold"
+            className="flex justify-center items-center bg-gray-900 hover:bg-gray-800 transition-all transform hover:scale-105 rounded-xl py-6 px-4 text-center text-white text-2xl font-bold shadow-xl"
           >
-            Fazer minha aplicação
-            <svg
-              className="ml-3 w-5 h-5 text-black"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M13 5l7 7-7 7M5 12h14" />
-            </svg>
+            Faça sua aplicação
+            <img
+              src="https://res.cloudinary.com/williamsondesign/arrow-right.svg"
+              className="ml-3 w-6 h-6"
+            />
           </a>
         </div>
       </div>

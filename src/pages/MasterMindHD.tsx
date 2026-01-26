@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 const competenciasMastermind = [
   {
     icon: "fa-solid fa-circle-check",
@@ -30,10 +28,6 @@ const vantagensMastermind = [
 ];
 
 export default function MasterMindHD() {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
   const goToWhats = () => {
     const message = encodeURIComponent("Quero fazer parte do Master MindHD!");
     window.open(

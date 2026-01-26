@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
+import { usePagination } from "../hooks/usePagination";
 import type { Product } from "../types/Product";
 
 import EditProductModal from "../components/marketplace/EditProductModal";
@@ -8,6 +9,8 @@ import ProductCard from "../components/marketplace/ProductCard";
 
 export default function Marketplace() {
   const { products, remove, toggleActive } = useProducts();
+  const { displayedItems, currentPage, setCurrentPage, totalPages } =
+    usePagination(products, 8);
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -37,13 +40,9 @@ export default function Marketplace() {
       <div className="mb-8">
         <button
           onClick={() => setShowCreateModal(true)}
-          className="
-            bg-gradient-to-r from-yellow-400 to-yellow-500
-            hover:from-yellow-500 hover:to-yellow-600
-            text-white font-semibold
-            px-6 py-3 rounded-md
-            shadow-md transition-all
-          "
+          className={
+            "bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-6 py-3 rounded-md shadow-md transition-all"
+          }
         >
           Nova Postagem
         </button>
@@ -51,7 +50,7 @@ export default function Marketplace() {
 
       {/* GRID DE POSTS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
+        {displayedItems.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -60,6 +59,40 @@ export default function Marketplace() {
             onToggleActive={toggleActive}
           />
         ))}
+      </div>
+
+      {/* PAGINAÇÃO */}
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button
+          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="px-3 py-1 rounded-md bg-gray-100 disabled:opacity-50"
+        >
+          Anterior
+        </button>
+
+        {Array.from({ length: totalPages }).map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)}
+            className={
+              "px-3 py-1 rounded-md " +
+              (currentPage === i + 1
+                ? "bg-yellow-500 text-white"
+                : "bg-gray-100")
+            }
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 rounded-md bg-gray-100 disabled:opacity-50"
+        >
+          Próxima
+        </button>
       </div>
 
       {/* MODAIS */}

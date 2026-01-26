@@ -159,7 +159,7 @@ export default function AlunaHD() {
             <img
               src="/images/alunaHDselo.png"
               alt="Selo"
-              className="rounded-3xl w-20 h-20 bg-white object-contain p-2"
+              className="rounded-full w-28 h-28 bg-white object-contain p-2"
             />
             <div className="ml-5">
               <span className="text-3xl font-semibold text-white">

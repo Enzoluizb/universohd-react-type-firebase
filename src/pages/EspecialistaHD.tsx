@@ -115,13 +115,12 @@ export default function EspecialistaHD() {
         </div>
 
         {/* bloco final */}
-        {/* bloco final */}
         <div className="w-full p-10 shadow-xl rounded-3xl bg-white text-gray-800">
           <div className="mb-8 pb-8 flex items-center border-b border-gray-200">
             <img
               src="/images/especialistaHDselo.png"
               alt="Selo"
-              className="rounded-3xl w-20 h-20 bg-white object-contain p-2"
+              className="rounded-3xl w-28 h-28 bg-white object-contain p-2"
             />
             <div className="ml-5">
               <span className="text-3xl font-semibold text-gray-900">

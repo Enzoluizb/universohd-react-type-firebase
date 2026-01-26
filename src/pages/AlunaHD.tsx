@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 const cards = [
   {
     title: "Pintura em Pinus e MDF",
@@ -44,10 +42,6 @@ const cards = [
 ];
 
 export default function AlunaHD() {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-
   return (
     <div>
       <main className="h-full relative bg-gradient-to-t from-emerald-100 to-white">
@@ -59,9 +53,9 @@ export default function AlunaHD() {
         <div className="absolute inset-0 bg-gradient-to-b from-white to-emerald-100 opacity-40 -z-10 pointer-events-none" />
 
         <div className="max-w-6xl mx-auto relative z-10 pt-6 pb-16 px-4">
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 mb-12">
+          <div className="flex flex-col lg:flex-col items-center justify-center gap-5 mb-8">
             <div className="hidden lg:flex justify-center w-full lg:w-auto">
-              <div className="w-80 h-80 rounded-full border-8 border-white shadow-2xl overflow-hidden ring-4 ring-emerald-200/30">
+              <div className="w-[420px] h-[260px] rounded-3xl border-2 border-white shadow-2xl overflow-hidden ring-4 ring-emerald-200/30">
                 <img
                   src="/images/AlunaHDSection.jpeg"
                   className="w-full h-full object-cover object-center"
@@ -73,7 +67,7 @@ export default function AlunaHD() {
             <div className="text-center lg:text-left">
               <a
                 href="https://pay.hotmart.com/L60469525G"
-                className="inline-block mb-4"
+                className="inline-block"
               >
                 <h1 className="font-extrabold tracking-tight text-white bg-emerald-700 px-6 py-2 rounded-full text-xl md:text-2xl hover:scale-105 transition-transform uppercase">
                   Seja Aluna HD
@@ -82,7 +76,7 @@ export default function AlunaHD() {
             </div>
           </div>
 
-          <div className="mb-12 text-center">
+          <div className="mb-8 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-emerald-800 max-w-4xl mx-auto leading-tight">
               Saiba como ter uma fonte de renda super lucrativa através da
               pintura de peças artesanais incríveis!

@@ -155,7 +155,7 @@ export default function MasterMindHD() {
 
           <button
             onClick={goToWhats}
-            className="flex justify-center items-center bg-blue-800 hover:bg-blue-700 transition-all transform hover:scale-105 rounded-xl py-6 px-4 text-center text-white text-2xl font-bold shadow-xl"
+            className="w-full flex justify-center items-center bg-blue-800 hover:bg-blue-700 transition-all transform hover:scale-105 rounded-xl py-6 px-4 text-center text-white text-2xl font-bold shadow-xl"
           >
             Quero ser Master MindHD!
             <img

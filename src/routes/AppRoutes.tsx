@@ -6,12 +6,24 @@ import AlunaHD from "../pages/AlunaHD";
 import EspecialistaHD from "../pages/EspecialistaHD";
 import MasterMindHD from "../pages/MasterMindHD";
 import EmbaixadoraHD from "../pages/EmbaixadoraHD";
+import Login from "../pages/Login";
+
+import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 export default function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/marketplace" element={<Marketplace />} />
+      <Route path="/login" element={<Login />} />
+
+      <Route
+        path="/marketplace"
+        element={
+          <ProtectedRoute>
+            <Marketplace />
+          </ProtectedRoute>
+        }
+      />
 
       <Route path="/alunahd" element={<AlunaHD />} />
       <Route path="/especialistahd" element={<EspecialistaHD />} />

@@ -1,6 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  function handleMarketplaceAccess() {
+    if (!user) {
+      navigate("/login");
+    } else {
+      navigate("/marketplace");
+    }
+  }
+
   return (
     <nav className="w-full bg-gray-100 border-b">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 flex items-center justify-between h-24">
@@ -8,8 +20,8 @@ export default function Navbar() {
           <img src="/images/logo.png" alt="Logo" className="h-14 w-auto" />
         </Link>
 
-        <Link
-          to="/marketplace"
+        <button
+          onClick={handleMarketplaceAccess}
           className="
             bg-gradient-to-r from-yellow-400 to-yellow-500
             hover:from-yellow-500 hover:to-yellow-600
@@ -21,7 +33,7 @@ export default function Navbar() {
         >
           Acesso Especialistas, Master Minds e<br />
           Embaixadoras HD
-        </Link>
+        </button>
       </div>
     </nav>
   );

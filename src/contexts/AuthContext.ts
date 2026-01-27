@@ -5,6 +5,7 @@ type UserRole = "admin" | "user";
 type AuthUser = {
   uid: string;
   email: string;
+  name: string;
   role: UserRole;
 };
 

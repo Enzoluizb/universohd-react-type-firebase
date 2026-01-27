@@ -1,22 +1,19 @@
 import { useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import { FirebaseError } from "firebase/app";
 
 export default function LoginForm() {
   const { login } = useAuth();
-  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
       await login(email, password);
-      navigate("/marketplace");
-    } catch (error) {
+    } catch (error: unknown) {
       if (error instanceof FirebaseError) {
         console.error("Erro no login:", error.code, error.message);
         alert(error.code);
@@ -35,6 +32,7 @@ export default function LoginForm() {
         className="w-full border p-3 rounded"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
       />
 
       <input
@@ -43,6 +41,7 @@ export default function LoginForm() {
         className="w-full border p-3 rounded"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
       />
 
       <button className="w-full bg-blue-800 text-white py-3 rounded">

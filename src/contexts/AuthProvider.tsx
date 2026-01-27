@@ -14,6 +14,7 @@ type UserRole = "admin" | "user";
 type AuthUser = {
   uid: string;
   email: string;
+  name: string;
   role: UserRole;
 };
 
@@ -44,6 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser({
         uid: firebaseUser.uid,
         email: firebaseUser.email!,
+        name: data?.name ?? "Usuário",
         role: data?.role === "admin" ? "admin" : "user",
       });
 

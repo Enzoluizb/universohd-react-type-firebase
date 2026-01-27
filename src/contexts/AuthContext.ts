@@ -1,8 +1,8 @@
 import { createContext } from "react";
 
-type UserRole = "admin" | "user";
+export type UserRole = "admin" | "user";
 
-type AuthUser = {
+export type AuthUser = {
   uid: string;
   email: string;
   name: string;

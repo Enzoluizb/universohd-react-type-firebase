@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Home from "../pages/Home";
 import Marketplace from "../pages/Marketplace";
+import Profile from "../pages/Profile";
 import AlunaHD from "../pages/AlunaHD";
 import EspecialistaHD from "../pages/EspecialistaHD";
 import MasterMindHD from "../pages/MasterMindHD";
@@ -21,6 +22,15 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <Marketplace />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />

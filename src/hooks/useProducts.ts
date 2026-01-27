@@ -9,6 +9,7 @@ import {
 
 import { uploadImage } from "../services/uploadImage";
 import type { Product } from "../types/Product";
+import { useAuth } from "./useAuth";
 
 type CreateProductPostInput = {
   title: string;
@@ -19,6 +20,7 @@ type CreateProductPostInput = {
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
+  const { user } = useAuth();
 
   async function createProductPost(data: CreateProductPostInput) {
     let imageUrl = "";
@@ -27,6 +29,8 @@ export function useProducts() {
       imageUrl = await uploadImage(data.image);
     }
 
+    if (!user) throw new Error("Usuário não autenticado");
+
     await createProduct({
       title: data.title,
       description: data.description,
@@ -34,7 +38,7 @@ export function useProducts() {
       imageUrl,
       active: true,
       createdAt: Date.now(),
-      ownerId: "mock-user-id",
+      ownerId: user.uid,
     });
   }
 

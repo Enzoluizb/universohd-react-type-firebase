@@ -9,6 +9,10 @@ export default function Navbar() {
     navigate(user ? "/marketplace" : "/login");
   }
 
+  function handleProfileAccess() {
+    navigate(user ? "/profile" : "/login");
+  }
+
   async function handleLogout() {
     await logout();
     navigate("/");
@@ -32,25 +36,28 @@ export default function Navbar() {
 
               <button
                 onClick={handleMarketplaceAccess}
-                className="
-                  bg-gradient-to-r from-yellow-400 to-yellow-500
+                className="bg-gradient-to-r from-yellow-400 to-yellow-500
                   hover:from-yellow-500 hover:to-yellow-600
-                  text-white text-sm font-semibold
-                  px-4 py-2 rounded-md
-                  shadow-md transition-all
-                "
+                  text-white text-sm font-semibold px-4 py-2 rounded-md
+                  shadow-md transition-all"
               >
                 Marketplace
               </button>
 
               <button
+                onClick={handleProfileAccess}
+                className="bg-gradient-to-r from-green-400 to-green-500
+                  hover:from-green-500 hover:to-green-600
+                  text-white text-sm font-semibold px-4 py-2 rounded-md
+                  shadow-md transition-all"
+              >
+                Perfil
+              </button>
+
+              <button
                 onClick={handleLogout}
-                className="
-                  bg-gray-300 hover:bg-gray-400
-                  text-gray-800 text-sm font-semibold
-                  px-4 py-2 rounded-md
-                  transition-all
-                "
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800
+                  text-sm font-semibold px-4 py-2 rounded-md transition-all"
               >
                 Sair
               </button>
@@ -58,14 +65,10 @@ export default function Navbar() {
           ) : (
             <button
               onClick={handleMarketplaceAccess}
-              className="
-                bg-gradient-to-r from-yellow-400 to-yellow-500
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500
                 hover:from-yellow-500 hover:to-yellow-600
-                text-white text-sm font-semibold
-                px-4 py-2 rounded-md
-                leading-tight text-center
-                shadow-md transition-all
-              "
+                text-white text-sm font-semibold px-4 py-2 rounded-md
+                leading-tight text-center shadow-md transition-all"
             >
               Acesso Especialistas, Master Minds e
               <br />

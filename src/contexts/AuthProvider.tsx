@@ -1,3 +1,4 @@
+// src/contexts/AuthProvider.tsx
 import { useEffect, useState } from "react";
 import {
   onAuthStateChanged,
@@ -8,17 +9,13 @@ import { doc, getDoc } from "firebase/firestore";
 
 import { auth, db } from "../services/firebase";
 import { AuthContext } from "./AuthContext";
+import type { AuthUser } from "./AuthContext";
 
-type UserRole = "admin" | "user";
-
-type AuthUser = {
-  uid: string;
-  email: string;
-  name: string;
-  role: UserRole;
+type AuthProviderProps = {
+  children: React.ReactNode;
 };
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 

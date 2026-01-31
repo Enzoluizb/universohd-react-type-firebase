@@ -1,4 +1,6 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
+
 import type { Product } from "../../types/Product";
 import { AuthContext } from "../../contexts/AuthContext";
 import {
@@ -6,7 +8,7 @@ import {
   canDeleteProduct,
   canToggleActive,
 } from "../../utils/permissions";
-import { Pencil, Trash2 } from "lucide-react";
+import ImagePreviewModal from "../ui/ImagePreviewModal";
 
 type Props = {
   product: Product;
@@ -22,6 +24,12 @@ export default function ProductCard({
   onToggleActive,
 }: Props) {
   const { user } = useContext(AuthContext);
+  const [showPreview, setShowPreview] = useState(false);
+
+  const canEdit = canEditProduct(user, product);
+  const canDelete = canDeleteProduct(user, product);
+  const canToggle = canToggleActive(user, product);
+  const isActive = product.active;
 
   function handleAcquire() {
     if (!product.whatsapp) return;
@@ -30,84 +38,88 @@ export default function ProductCard({
     const url = `https://wa.me/${product.whatsapp}?text=${encodeURIComponent(
       message,
     )}`;
+
     window.open(url, "_blank");
   }
 
-  const showEdit = canEditProduct(user, product);
-  const showDelete = canDeleteProduct(user, product);
-  const showToggleActive = canToggleActive(user, product);
-
   return (
-    <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm bg-white">
-      <div>
-        {product.imageUrl ? (
-          <img
-            src={product.imageUrl}
-            alt={product.title}
-            className="h-40 w-full object-cover rounded mb-3"
-          />
-        ) : (
-          <div className="bg-gray-100 h-40 rounded mb-3" />
-        )}
+    <>
+      <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm bg-white">
+        <div>
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.title}
+              onClick={() => setShowPreview(true)}
+              className="h-40 w-full object-cover rounded mb-3 cursor-pointer hover:opacity-90 transition"
+            />
+          ) : (
+            <div className="bg-gray-100 h-40 rounded mb-3" />
+          )}
 
-        <h3 className="font-semibold text-lg mb-1">{product.title}</h3>
+          <h3 className="font-semibold text-lg mb-1">{product.title}</h3>
+          <p className="text-sm text-gray-600 mb-3">{product.description}</p>
 
-        <p className="text-sm text-gray-600 mb-3">{product.description}</p>
-
-        <span
-          className={`inline-block text-xs px-2 py-1 rounded-full ${
-            product.active
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-500"
-          }`}
-        >
-          {product.active ? "Ativo" : "Inativo"}
-        </span>
-      </div>
-
-      <div className="flex items-center justify-between mt-4 gap-2">
-        {/* Ação principal */}
-        {product.active && (
-          <button
-            onClick={handleAcquire}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 text-sm rounded transition"
+          <span
+            className={`inline-block text-xs px-2 py-1 rounded-full ${
+              isActive
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-500"
+            }`}
           >
-            Quero adquirir
-          </button>
-        )}
+            {isActive ? "Ativo" : "Inativo"}
+          </span>
+        </div>
 
-        {/* Ações secundárias */}
-        <div className="flex items-center gap-2 ml-auto">
-          {showToggleActive && (
+        <div className="flex items-center justify-between mt-4">
+          {isActive && (
             <button
-              onClick={() => onToggleActive(product)}
-              className="text-xs text-gray-500 hover:text-gray-800 transition"
+              onClick={handleAcquire}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 text-sm rounded transition"
             >
-              {product.active ? "Inativar" : "Ativar"}
+              Quero adquirir
             </button>
           )}
 
-          {showEdit && (
-            <button
-              onClick={() => onEdit(product)}
-              className="text-gray-500 hover:text-blue-600 transition"
-              title="Editar"
-            >
-              <Pencil size={18} />
-            </button>
-          )}
+          <div className="flex items-center gap-2 ml-auto">
+            {canToggle && (
+              <button
+                onClick={() => onToggleActive(product)}
+                className="text-xs text-gray-500 hover:text-gray-800 transition"
+              >
+                {isActive ? "Inativar" : "Ativar"}
+              </button>
+            )}
 
-          {showDelete && (
-            <button
-              onClick={() => onRemove(product.id)}
-              className="text-gray-400 hover:text-red-600 transition"
-              title="Excluir"
-            >
-              <Trash2 size={18} />
-            </button>
-          )}
+            {canEdit && (
+              <button
+                onClick={() => onEdit(product)}
+                className="text-gray-500 hover:text-blue-600 transition"
+                title="Editar"
+              >
+                <Pencil size={18} />
+              </button>
+            )}
+
+            {canDelete && (
+              <button
+                onClick={() => onRemove(product.id)}
+                className="text-gray-400 hover:text-red-600 transition"
+                title="Excluir"
+              >
+                <Trash2 size={18} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+
+      {showPreview && product.imageUrl && (
+        <ImagePreviewModal
+          imageUrl={product.imageUrl}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
+    </>
   );
 }

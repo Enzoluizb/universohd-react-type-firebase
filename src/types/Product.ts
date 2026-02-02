@@ -7,4 +7,5 @@ export type Product = {
     active: boolean;
     createdAt: number;
     ownerId: string;
+    ownerName: string;
 };

@@ -39,6 +39,7 @@ export function useProducts() {
       active: true,
       createdAt: Date.now(),
       ownerId: user.uid,
+      ownerName: user.name,
     });
   }
 

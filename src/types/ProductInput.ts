@@ -5,5 +5,6 @@ export type ProductInput = {
     active: boolean;
     createdAt: number;
     ownerId: string;
+    ownerName: string;
     imageUrl?: string;
 };

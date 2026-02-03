@@ -46,15 +46,11 @@ export default function ProductCard({
     <>
       <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm bg-white">
         <div>
-<<<<<<< HEAD
-=======
           {/* Autor do produto */}
           <p className="text-xs text-gray-500 mb-0.5">Postado por</p>
           <p className="text-sm font-semibold text-black mb-2">
             {product.ownerName || "Usuário desconhecido"}
           </p>
-
->>>>>>> 99767f91add5f8327a74bfde2a95d7a7df90b8c1
           {product.imageUrl ? (
             <img
               src={product.imageUrl}

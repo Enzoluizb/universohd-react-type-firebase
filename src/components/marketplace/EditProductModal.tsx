@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Product } from "../../types/Product";
 import { useProducts } from "../../hooks/useProducts";
-<<<<<<< HEAD
-=======
 import { uploadImage } from "../../services/uploadImage";
->>>>>>> 99767f91add5f8327a74bfde2a95d7a7df90b8c1
 
 type Props = {
   product: Product;
@@ -13,17 +10,6 @@ type Props = {
 
 export default function EditProductModal({ product, onClose }: Props) {
   const { updateProduct } = useProducts();
-<<<<<<< HEAD
-  const [title, setTitle] = useState(product.title);
-
-  useEffect(() => {
-    setTitle(product.title);
-  }, [product]);
-
-  async function handleSave() {
-    await updateProduct(product.id!, { title });
-    onClose();
-=======
 
   const [title, setTitle] = useState(product.title);
   const [description, setDescription] = useState(product.description || "");
@@ -44,7 +30,6 @@ export default function EditProductModal({ product, onClose }: Props) {
 
       let imageUrl = product.imageUrl;
 
-      // se o usuário escolheu uma nova imagem
       if (imageFile) {
         imageUrl = await uploadImage(imageFile);
       }
@@ -61,7 +46,6 @@ export default function EditProductModal({ product, onClose }: Props) {
     } finally {
       setLoading(false);
     }
->>>>>>> 99767f91add5f8327a74bfde2a95d7a7df90b8c1
   }
 
   return (
@@ -69,19 +53,13 @@ export default function EditProductModal({ product, onClose }: Props) {
       <div className="bg-white p-6 rounded w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Editar produto</h2>
 
-<<<<<<< HEAD
-        <input
-          className="border p-2 w-full mb-4"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          autoFocus
-=======
         {/* Título */}
         <input
           className="border p-2 w-full mb-3"
           placeholder="Título"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          autoFocus
         />
 
         {/* Descrição */}
@@ -93,7 +71,7 @@ export default function EditProductModal({ product, onClose }: Props) {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        {/* Preview da imagem atual / nova */}
+        {/* Preview da imagem */}
         {imagePreview && (
           <img
             src={imagePreview}
@@ -102,7 +80,7 @@ export default function EditProductModal({ product, onClose }: Props) {
           />
         )}
 
-        {/* Upload de imagem */}
+        {/* Upload */}
         <input
           type="file"
           accept="image/*"
@@ -114,34 +92,23 @@ export default function EditProductModal({ product, onClose }: Props) {
             setImageFile(file);
             setImagePreview(URL.createObjectURL(file));
           }}
->>>>>>> 99767f91add5f8327a74bfde2a95d7a7df90b8c1
         />
 
         <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
-<<<<<<< HEAD
-            className="bg-gray-400 text-white px-4 py-2"
-=======
             disabled={loading}
             className="bg-gray-400 text-white px-4 py-2 disabled:opacity-50"
->>>>>>> 99767f91add5f8327a74bfde2a95d7a7df90b8c1
           >
             Cancelar
           </button>
 
           <button
             onClick={handleSave}
-<<<<<<< HEAD
-            className="bg-blue-600 text-white px-4 py-2"
-          >
-            Salvar
-=======
             disabled={loading}
             className="bg-blue-600 text-white px-4 py-2 disabled:opacity-50"
           >
             {loading ? "Salvando..." : "Salvar"}
->>>>>>> 99767f91add5f8327a74bfde2a95d7a7df90b8c1
           </button>
         </div>
       </div>

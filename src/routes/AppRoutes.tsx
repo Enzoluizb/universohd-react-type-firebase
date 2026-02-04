@@ -17,15 +17,10 @@ export default function AppRoutes() {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/marketplace"
-        element={
-          <ProtectedRoute>
-            <Marketplace />
-          </ProtectedRoute>
-        }
-      />
+      {/* Marketplace público */}
+      <Route path="/marketplace" element={<Marketplace />} />
 
+      {/* Perfil continua protegido */}
       <Route
         path="/profile"
         element={

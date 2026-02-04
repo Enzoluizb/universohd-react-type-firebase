@@ -6,8 +6,10 @@ import type { Product } from "../types/Product";
 import EditProductModal from "../components/marketplace/EditProductModal";
 import CreateProductModal from "../components/marketplace/CreateProductModal";
 import ProductCard from "../components/marketplace/ProductCard";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Marketplace() {
+  const { user } = useAuth();
   const { products, remove, toggleActive } = useProducts();
   const { displayedItems, currentPage, setCurrentPage, totalPages } =
     usePagination(products, 8);
@@ -37,16 +39,16 @@ export default function Marketplace() {
       </p>
 
       {/* BOTÃO NOVA POSTAGEM */}
-      <div className="mb-8">
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className={
-            "bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-6 py-3 rounded-md shadow-md transition-all"
-          }
-        >
-          Nova Postagem
-        </button>
-      </div>
+      {user && (
+        <div className="mb-8">
+          <button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-semibold px-6 py-3 rounded-md shadow-md transition-all"
+          >
+            Nova Postagem
+          </button>
+        </div>
+      )}
 
       {/* GRID DE POSTS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

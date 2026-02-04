@@ -11,15 +11,19 @@ type Props = {
 export default function EditProductModal({ product, onClose }: Props) {
   const { updateProduct } = useProducts();
 
+  // Estados do formulário - guardar os dados editáveis
   const [title, setTitle] = useState(product.title);
   const [description, setDescription] = useState(product.description || "");
+  const [whatsapp, setWhatsapp] = useState(product.whatsapp || "");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState(product.imageUrl || "");
   const [loading, setLoading] = useState(false);
 
+  // Atualiza os estados quando o produto muda
   useEffect(() => {
     setTitle(product.title);
     setDescription(product.description || "");
+    setWhatsapp(product.whatsapp || "");
     setImagePreview(product.imageUrl || "");
     setImageFile(null);
   }, [product]);
@@ -37,6 +41,7 @@ export default function EditProductModal({ product, onClose }: Props) {
       await updateProduct(product.id!, {
         title,
         description,
+        whatsapp,
         imageUrl,
       });
 
@@ -69,6 +74,15 @@ export default function EditProductModal({ product, onClose }: Props) {
           rows={3}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+        />
+
+        {/* WhatsApp */}
+        <input
+          type="tel"
+          className="border p-2 w-full mb-3"
+          placeholder="WhatsApp (ex: 11987654321)"
+          value={whatsapp}
+          onChange={(e) => setWhatsapp(e.target.value)}
         />
 
         {/* Preview da imagem */}

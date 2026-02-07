@@ -1,6 +1,7 @@
 import { useState } from "react";
 import BaseModal from "../ui/BaseModal";
 import { useProducts } from "../../hooks/useProducts";
+import { formatWhatsapp } from "../../utils/formatWhatsapp";
 
 type Props = {
   onClose: () => void;
@@ -11,16 +12,17 @@ export default function CreateProductModal({ onClose }: Props) {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [whatsapp, setWhatsapp] = useState("");
+  const [whatsappRaw, setWhatsappRaw] = useState("");
 
   async function handlePublish() {
-    if (!title || !description || !whatsapp) return;
+    if (!title || !description || whatsappRaw.length !== 11) return;
 
     await createProductPost({
       title,
       description,
-      whatsapp,
+      whatsapp: whatsappRaw,
       image,
     });
 
@@ -49,10 +51,16 @@ export default function CreateProductModal({ onClose }: Props) {
       />
 
       <input
+        type="tel"
+        inputMode="numeric"
         className="border p-2 w-full mb-3"
-        placeholder="WhatsApp (ex: 5547999999999)"
+        placeholder="WhatsApp (ex: (47) 99999-9999)"
         value={whatsapp}
-        onChange={(e) => setWhatsapp(e.target.value)}
+        onChange={(e) => {
+          const raw = e.target.value.replace(/\D/g, "").slice(0, 11);
+          setWhatsappRaw(raw);
+          setWhatsapp(formatWhatsapp(raw));
+        }}
       />
 
       <input

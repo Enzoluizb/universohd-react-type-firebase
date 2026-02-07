@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Product } from "../../types/Product";
 import { useProducts } from "../../hooks/useProducts";
 import { uploadImage } from "../../services/uploadImage";
+import { formatWhatsapp } from "../../utils/formatWhatsapp";
 
 type Props = {
   product: Product;
@@ -14,16 +15,20 @@ export default function EditProductModal({ product, onClose }: Props) {
   // Estados do formulário - guardar os dados editáveis
   const [title, setTitle] = useState(product.title);
   const [description, setDescription] = useState(product.description || "");
-  const [whatsapp, setWhatsapp] = useState(product.whatsapp || "");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [whatsappRaw, setWhatsappRaw] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState(product.imageUrl || "");
   const [loading, setLoading] = useState(false);
 
-  // Atualiza os estados quando o produto muda
   useEffect(() => {
     setTitle(product.title);
     setDescription(product.description || "");
-    setWhatsapp(product.whatsapp || "");
+
+    const raw = product.whatsapp || "";
+    setWhatsappRaw(raw);
+    setWhatsapp(formatWhatsapp(raw));
+
     setImagePreview(product.imageUrl || "");
     setImageFile(null);
   }, [product]);
@@ -41,7 +46,7 @@ export default function EditProductModal({ product, onClose }: Props) {
       await updateProduct(product.id!, {
         title,
         description,
-        whatsapp,
+        whatsapp: whatsappRaw,
         imageUrl,
       });
 
@@ -79,10 +84,15 @@ export default function EditProductModal({ product, onClose }: Props) {
         {/* WhatsApp */}
         <input
           type="tel"
+          inputMode="numeric"
           className="border p-2 w-full mb-3"
-          placeholder="WhatsApp (ex: 11987654321)"
+          placeholder="WhatsApp (ex: (47) 99999-9999)"
           value={whatsapp}
-          onChange={(e) => setWhatsapp(e.target.value)}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/\D/g, "").slice(0, 11);
+            setWhatsappRaw(raw);
+            setWhatsapp(formatWhatsapp(raw));
+          }}
         />
 
         {/* Preview da imagem */}

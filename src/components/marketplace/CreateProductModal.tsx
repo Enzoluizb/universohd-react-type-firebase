@@ -12,7 +12,7 @@ export default function CreateProductModal({ onClose }: Props) {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<(File | null)[]>([null, null, null]);
   const [whatsapp, setWhatsapp] = useState("");
   const [whatsappRaw, setWhatsappRaw] = useState("");
 
@@ -23,7 +23,7 @@ export default function CreateProductModal({ onClose }: Props) {
       title,
       description,
       whatsapp: whatsappRaw,
-      image,
+      images,
     });
 
     onClose();
@@ -63,12 +63,23 @@ export default function CreateProductModal({ onClose }: Props) {
         }}
       />
 
-      <input
-        type="file"
-        accept="image/*"
-        className="mb-4"
-        onChange={(e) => setImage(e.target.files?.[0] ?? null)}
-      />
+      {[0, 1, 2].map((index) => (
+        <input
+          key={index}
+          type="file"
+          accept="image/*"
+          className="mb-2"
+          onChange={(e) => {
+            const file = e.target.files?.[0] ?? null;
+
+            setImages((prev) => {
+              const copy = [...prev];
+              copy[index] = file;
+              return copy;
+            });
+          }}
+        />
+      ))}
 
       <div className="flex justify-end gap-2">
         <button onClick={onClose} className="px-4 py-2 text-gray-600">

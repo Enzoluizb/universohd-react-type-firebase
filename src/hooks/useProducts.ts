@@ -15,18 +15,25 @@ type CreateProductPostInput = {
   title: string;
   description: string;
   whatsapp: string;
-  image?: File | null;
+  images?: (File | null)[];
 };
+
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const { user } = useAuth();
 
   async function createProductPost(data: CreateProductPostInput) {
-    let imageUrl = "";
+    let imageUrls: string[] = [];
 
-    if (data.image) {
-      imageUrl = await uploadImage(data.image);
+    if (data.images && data.images.length > 0) {
+      const validImages = data.images.filter(
+        (file): file is File => file instanceof File
+      );
+
+      imageUrls = await Promise.all(
+        validImages.map((file) => uploadImage(file))
+      );
     }
 
     if (!user) throw new Error("Usuário não autenticado");
@@ -35,12 +42,19 @@ export function useProducts() {
       title: data.title,
       description: data.description,
       whatsapp: data.whatsapp,
-      imageUrl,
+
+      // legado (compatibilidade)
+      imageUrl: imageUrls[0] ?? "",
+
+      // novo
+      images: imageUrls,
+
       active: true,
       createdAt: Date.now(),
       ownerId: user.uid,
       ownerName: user.name || "Usuário",
     });
+
   }
 
   async function updateProduct(id: string, data: Partial<Product>) {

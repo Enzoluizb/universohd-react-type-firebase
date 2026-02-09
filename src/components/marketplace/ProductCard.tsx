@@ -25,6 +25,7 @@ export default function ProductCard({
 }: Props) {
   const { user } = useContext(AuthContext);
   const [showPreview, setShowPreview] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
 
   const canEdit = canEditProduct(user, product);
   const canDelete = canDeleteProduct(user, product);
@@ -42,6 +43,21 @@ export default function ProductCard({
     window.open(url, "_blank");
   }
 
+  const images =
+    product.images && product.images.length > 0
+      ? product.images
+      : product.imageUrl
+        ? [product.imageUrl]
+        : [];
+
+  function nextImage() {
+    setCurrentImage((prev) => (prev + 1) % images.length);
+  }
+
+  function prevImage() {
+    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+  }
+
   return (
     <>
       <div className="border rounded-lg p-4 flex flex-col justify-between shadow-sm bg-white">
@@ -51,13 +67,35 @@ export default function ProductCard({
           <p className="text-sm font-semibold text-black mb-2">
             {product.ownerName || "Usuário desconhecido"}
           </p>
-          {product.imageUrl ? (
-            <img
-              src={product.imageUrl}
-              alt={product.title}
-              onClick={() => setShowPreview(true)}
-              className="h-40 w-full object-cover rounded mb-3 cursor-pointer hover:opacity-90 transition"
-            />
+          {images.length > 0 ? (
+            <div className="relative mb-3">
+              <img
+                src={images[currentImage]}
+                alt={product.title}
+                onClick={() => setShowPreview(true)}
+                className="h-40 w-full object-cover rounded cursor-pointer hover:opacity-90 transition"
+              />
+
+              {images.length > 1 && (
+                <>
+                  {/* esquerda */}
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-1 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-700 rounded-full w-7 h-7 flex items-center justify-center shadow"
+                  >
+                    ‹
+                  </button>
+
+                  {/* direita */}
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-700 rounded-full w-7 h-7 flex items-center justify-center shadow"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
+            </div>
           ) : (
             <div className="bg-gray-100 h-40 rounded mb-3" />
           )}
@@ -119,9 +157,9 @@ export default function ProductCard({
         </div>
       </div>
 
-      {showPreview && product.imageUrl && (
+      {showPreview && images[currentImage] && (
         <ImagePreviewModal
-          imageUrl={product.imageUrl}
+          imageUrl={images[currentImage]}
           onClose={() => setShowPreview(false)}
         />
       )}

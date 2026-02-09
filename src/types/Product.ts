@@ -4,11 +4,8 @@ export type Product = {
   description: string;
   whatsapp: string;
 
-  // legado
-  imageUrl?: string;
-
-  // novo
-  images?: string[];
+  imageUrl?: string; // legado
+  images?: string[];  // novo
 
   active: boolean;
   createdAt: number;

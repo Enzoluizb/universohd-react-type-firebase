@@ -50,6 +50,8 @@ export default function ProductCard({
         ? [product.imageUrl]
         : [];
 
+  //const images = product.images ?? [];
+
   function nextImage() {
     setCurrentImage((prev) => (prev + 1) % images.length);
   }

@@ -159,7 +159,8 @@ export default function ProductCard({
 
       {showPreview && images[currentImage] && (
         <ImagePreviewModal
-          imageUrl={images[currentImage]}
+          images={images}
+          initialIndex={currentImage}
           onClose={() => setShowPreview(false)}
         />
       )}

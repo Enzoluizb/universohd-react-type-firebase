@@ -5,10 +5,12 @@ import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 
 import { AuthProvider } from "../src/contexts/AuthProvider";
+import ScrollToTop from "./components/layout/ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AuthProvider>
         <div className="flex min-h-screen flex-col">
           <Navbar />

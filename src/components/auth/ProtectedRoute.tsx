@@ -2,22 +2,23 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import React from "react";
 
-// Define o tipo das propriedades do componente
-// children representa qualquer componente JSX passado dentro do ProtectedRoute
 type Props = {
   children: React.ReactNode;
+  requiredRole?: "admin";
 };
 
-export default function ProtectedRoute({ children }: Props) {
+export default function ProtectedRoute({ children, requiredRole }: Props) {
   const { user, loading } = useAuth();
 
   if (loading) return null;
 
-  // Se não existir um usuário logado,
-  // redireciona automaticamente para a página de login
-  if (!user) return <Navigate to="/login" />;
+  // Não está logado
+  if (!user) return <Navigate to="/login" replace />;
 
-  // Se o usuário estiver autenticado,
-  // renderiza normalmente o conteúdo protegido
+  // Está logado mas não tem permissão suficiente
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/" replace />;
+  }
+
   return <>{children}</>;
 }

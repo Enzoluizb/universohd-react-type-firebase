@@ -1,3 +1,5 @@
+import { useCourseLink } from "../hooks/useCourseLink";
+
 const competencias = [
   { icon: "fa-solid fa-lightbulb", text: "TPM - Visão Empreendedora" },
   { icon: "fa-solid fa-clock", text: "Gestão do Tempo" },
@@ -12,6 +14,8 @@ const competencias = [
 ];
 
 export default function EspecialistaHD() {
+  const { url, loading } = useCourseLink("especialistahd");
+
   return (
     <main className="h-full relative bg-gradient-to-t from-gray-100 to-white">
       {/* imagem mobile */}
@@ -38,11 +42,14 @@ export default function EspecialistaHD() {
 
           <div className="text-center">
             <a
-              href="https://forms.gle/AEkhvKgwTtSRupSDA"
+              href={url || "#"}
+              onClick={(e) => {
+                if (!url) e.preventDefault();
+              }}
               className="inline-block"
             >
               <span className="inline-block bg-gray-900 text-white text-sm font-medium px-5 py-2 rounded-md hover:bg-gray-800 transition">
-                Pré-inscrições abertas
+                {loading ? "Carregando..." : "Faça sua aplicação"}
               </span>
             </a>
 

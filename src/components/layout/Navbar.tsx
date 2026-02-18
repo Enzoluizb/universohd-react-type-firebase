@@ -54,6 +54,17 @@ export default function Navbar() {
                 Perfil
               </button>
 
+              {user?.role === "admin" && (
+                <button
+                  onClick={() => navigate("/admin/links")}
+                  className="bg-purple-500 hover:bg-purple-600
+      text-white text-sm font-semibold px-4 py-2 rounded-md
+      shadow-md transition-all"
+                >
+                  Gerenciar Links
+                </button>
+              )}
+
               <button
                 onClick={handleLogout}
                 className="bg-gray-300 hover:bg-gray-400 text-gray-800

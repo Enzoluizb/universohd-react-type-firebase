@@ -8,6 +8,7 @@ import EspecialistaHD from "../pages/EspecialistaHD";
 import MasterMindHD from "../pages/MasterMindHD";
 import EmbaixadoraHD from "../pages/EmbaixadoraHD";
 import Login from "../pages/Login";
+import AdminLinks from "../pages/AdminLinks";
 
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 
@@ -18,6 +19,15 @@ export default function AppRoutes() {
       <Route path="/login" element={<Login />} />
 
       <Route path="/marketplace" element={<Marketplace />} />
+
+      <Route
+        path="/admin/links"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminLinks />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/profile"

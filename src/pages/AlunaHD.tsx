@@ -1,3 +1,5 @@
+import { useCourseLink } from "../hooks/useCourseLink";
+
 const cards = [
   {
     title: "Pintura em Pinus e MDF",
@@ -42,6 +44,8 @@ const cards = [
 ];
 
 export default function AlunaHD() {
+  const { url, loading } = useCourseLink("alunahd");
+
   return (
     <main className="h-full relative bg-gradient-to-t from-emerald-100 to-white">
       {/* imagem mobile */}
@@ -68,11 +72,14 @@ export default function AlunaHD() {
 
           <div className="text-center">
             <a
-              href="https://pay.hotmart.com/L60469525G"
+              href={url || "#"}
+              onClick={(e) => {
+                if (!url) e.preventDefault();
+              }}
               className="inline-block"
             >
               <span className="inline-block bg-emerald-800 text-white text-sm font-medium px-5 py-2 rounded-md hover:bg-emerald-700 transition">
-                Seja Aluna HD
+                {loading ? "Carregando..." : "Seja Aluna HD"}
               </span>
             </a>
 
@@ -186,10 +193,13 @@ export default function AlunaHD() {
           </blockquote>
 
           <a
-            href="https://pay.hotmart.com/L60469525G"
+            href={url || "#"}
+            onClick={(e) => {
+              if (!url) e.preventDefault();
+            }}
             className="flex justify-center items-center bg-emerald-400 hover:bg-emerald-500 transition-all transform hover:scale-105 rounded-xl py-6 px-4 text-center text-white text-2xl font-bold shadow-xl"
           >
-            SEJA ALUNA HD
+            {loading ? "Carregando..." : "SEJA ALUNA HD"}
             <img
               src="https://res.cloudinary.com/williamsondesign/arrow-right.svg"
               className="ml-3 w-6 h-6"

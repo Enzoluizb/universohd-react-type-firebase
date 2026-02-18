@@ -1,3 +1,5 @@
+import { useCourseLink } from "../hooks/useCourseLink";
+
 const vantagensEmbaixadora = [
   "Selo único de Embaixadora HD",
   "Livre acesso a todas as Mentorias do Universo HD",
@@ -9,15 +11,7 @@ const vantagensEmbaixadora = [
 ];
 
 export default function EmbaixadoraHD() {
-  const goToWhats = () => {
-    const message = encodeURIComponent(
-      "Quero saber mais sobre o nível Embaixadora HD!",
-    );
-    window.open(
-      `https://api.whatsapp.com/send?phone=5547999297424&text=${message}`,
-      "_blank",
-    );
-  };
+  const { url, loading } = useCourseLink("embaixadorahd");
 
   return (
     <main className="min-h-screen relative bg-gradient-to-b from-yellow-400 to-white overflow-hidden">
@@ -120,12 +114,15 @@ export default function EmbaixadoraHD() {
               </li>
             </ul>
 
-            <button
-              onClick={goToWhats}
+            <a
+              href={url || "#"}
+              onClick={(e) => {
+                if (!url) e.preventDefault();
+              }}
               className="w-full flex justify-center items-center bg-yellow-500 hover:bg-yellow-400 transition-all transform hover:scale-105 rounded-xl py-6 text-center text-white text-2xl shadow-xl font-bold mt-6"
             >
-              Quero ser Embaixadora HD!
-            </button>
+              {loading ? "Carregando..." : "Quero ser Embaixadora HD!"}
+            </a>
           </div>
         </div>
       </div>

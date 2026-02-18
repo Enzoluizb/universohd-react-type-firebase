@@ -1,3 +1,5 @@
+import { useCourseLink } from "../hooks/useCourseLink";
+
 const competenciasMastermind = [
   {
     icon: "fa-solid fa-circle-check",
@@ -28,13 +30,7 @@ const vantagensMastermind = [
 ];
 
 export default function MasterMindHD() {
-  const goToWhats = () => {
-    const message = encodeURIComponent("Quero fazer parte do Master MindHD!");
-    window.open(
-      `https://api.whatsapp.com/send?phone=5547999297424&text=${message}`,
-      "_blank",
-    );
-  };
+  const { url, loading } = useCourseLink("mastermindhd");
 
   return (
     <main className="h-full relative bg-gradient-to-b from-blue-800 to-white">
@@ -153,16 +149,19 @@ export default function MasterMindHD() {
             faça parte do terceiro nível House Decor
           </blockquote>
 
-          <button
-            onClick={goToWhats}
+          <a
+            href={url || "#"}
+            onClick={(e) => {
+              if (!url) e.preventDefault();
+            }}
             className="w-full flex justify-center items-center bg-blue-800 hover:bg-blue-700 transition-all transform hover:scale-105 rounded-xl py-6 text-center text-white text-2xl font-bold shadow-xl"
           >
-            Quero ser Master MindHD!
+            {loading ? "Carregando..." : "Quero ser Master MindHD!"}
             <img
               src="https://res.cloudinary.com/williamsondesign/arrow-right.svg"
               className="ml-3 w-6 h-6"
             />
-          </button>
+          </a>
         </div>
       </div>
     </main>

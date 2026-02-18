@@ -6,6 +6,7 @@ export default function AdminLinks() {
   const [links, setLinks] = useState<CourseLink[]>([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
+  const [successId, setSuccessId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchLinks() {
@@ -26,11 +27,30 @@ export default function AdminLinks() {
   async function handleSave(id: string, url: string) {
     try {
       setSavingId(id);
-      await updateCourseLink(id, url);
-      alert("Link atualizado com sucesso!");
+
+      let formattedUrl = url.trim();
+
+      if (!/^https?:\/\//i.test(formattedUrl)) {
+        formattedUrl = `https://${formattedUrl}`;
+      }
+
+      await updateCourseLink(id, formattedUrl);
+
+      setLinks((prev) =>
+        prev.map((link) =>
+          link.id === id ? { ...link, url: formattedUrl } : link,
+        ),
+      );
+
+      // Mostra mensagem de sucesso
+      setSuccessId(id);
+
+      // Remove após 3 segundos
+      setTimeout(() => {
+        setSuccessId(null);
+      }, 3000);
     } catch (error) {
       console.error("Erro ao atualizar link:", error);
-      alert("Erro ao atualizar link.");
     } finally {
       setSavingId(null);
     }
@@ -63,6 +83,11 @@ export default function AdminLinks() {
                 {savingId === link.id ? "Salvando..." : "Salvar"}
               </button>
             </div>
+            {successId === link.id && (
+              <p className="text-green-600 text-sm mt-2 font-medium">
+                Link salvo com sucesso ✔
+              </p>
+            )}
           </div>
         ))}
       </div>

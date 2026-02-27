@@ -1,70 +1,216 @@
-import { useState } from "react";
-import { createUserByAdmin } from "../services/functions";
+import { useEffect, useState } from "react";
+import {
+  subscribeToUsers,
+  updateUserRole,
+  updateUserInfo,
+  deleteUserById,
+  createNewUser,
+} from "../services/userService";
+import type { User } from "../services/userService";
 
 export default function Users() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  async function handleCreateUser(e: React.FormEvent) {
-    e.preventDefault();
+  // Modal criar
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newName, setNewName] = useState("");
 
-    try {
-      setLoading(true);
-      const result = await createUserByAdmin(email, password);
+  // Modal editar
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editEmail, setEditEmail] = useState("");
 
-      alert("Usuário criado com sucesso!");
-      console.log("Criado:", result);
-
-      setEmail("");
-      setPassword("");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        alert(error.message);
-      } else {
-        console.error(error);
-        alert("Erro ao criar usuário");
-      }
-    } finally {
+  useEffect(() => {
+    const unsubscribe = subscribeToUsers((usersData) => {
+      setUsers(usersData);
       setLoading(false);
-    }
-  }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleCreateUser = async () => {
+    if (!newEmail || !newPassword || !newName) return;
+    await createNewUser(newEmail, newPassword, newName);
+    setNewEmail("");
+    setNewPassword("");
+    setNewName("");
+    setShowCreateModal(false);
+  };
+
+  const handleOpenEdit = (user: User) => {
+    setEditUser(user);
+    setEditName(user.name);
+    setEditEmail(user.email);
+    setShowEditModal(true);
+  };
+
+  const handleEditUser = async () => {
+    if (!editUser || !editName || !editEmail) return;
+    await updateUserInfo(editUser.uid, editName, editEmail);
+    setShowEditModal(false);
+    setEditUser(null);
+  };
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-gray-500 text-lg">Carregando...</p>
+      </div>
+    );
 
   return (
-    <div className="max-w-xl mx-auto mt-16 bg-white shadow-lg rounded-xl p-8">
-      <h1 className="text-2xl font-bold mb-6 text-center">
-        Gerenciar Usuários
-      </h1>
-
-      <form onSubmit={handleCreateUser} className="flex flex-col gap-4">
-        <input
-          type="email"
-          placeholder="Email do usuário"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border rounded-md px-4 py-2"
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded-md px-4 py-2"
-          required
-        />
-
+    <div className="min-h-screen bg-gray-100 p-10">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Painel de Usuários
+        </h2>
         <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 text-white
-          font-semibold py-2 rounded-md transition-all"
+          onClick={() => setShowCreateModal(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition"
         >
-          {loading ? "Criando..." : "Criar Usuário"}
+          + Adicionar Usuário
         </button>
-      </form>
+      </div>
+
+      {/* Tabela */}
+      <div className="bg-white rounded-xl shadow overflow-hidden">
+        <table className="w-full text-left">
+          <thead className="bg-gray-50 border-b">
+            <tr>
+              <th className="p-4 text-sm font-medium text-gray-600">Nome</th>
+              <th className="p-4 text-sm font-medium text-gray-600">Email</th>
+              <th className="p-4 text-sm font-medium text-gray-600">Role</th>
+              <th className="p-4 text-sm font-medium text-gray-600">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr
+                key={user.uid}
+                className="border-b hover:bg-gray-50 transition"
+              >
+                <td className="p-4 text-gray-700">{user.name}</td>
+                <td className="p-4 text-gray-700">{user.email}</td>
+                <td className="p-4">
+                  <select
+                    value={user.role}
+                    onChange={(e) => updateUserRole(user.uid, e.target.value)}
+                    className="border rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none"
+                  >
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </td>
+                <td className="p-4 flex gap-2">
+                  {/* ✅ Botão editar */}
+                  <button
+                    onClick={() => handleOpenEdit(user)}
+                    className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md transition"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => deleteUserById(user.uid)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition"
+                  >
+                    🗑
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Modal Criar */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Novo Usuário
+            </h3>
+            <input
+              type="text"
+              placeholder="Nome"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <input
+              type="password"
+              placeholder="Senha"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            />
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setShowCreateModal(false)}
+                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleCreateUser}
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition"
+              >
+                Criar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ Modal Editar */}
+      {showEditModal && editUser && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+          <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Editar Usuário
+            </h3>
+            <input
+              type="text"
+              placeholder="Nome"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-yellow-400 outline-none"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={editEmail}
+              onChange={(e) => setEditEmail(e.target.value)}
+              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-yellow-400 outline-none"
+            />
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleEditUser}
+                className="px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-white transition"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

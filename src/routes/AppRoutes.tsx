@@ -9,6 +9,7 @@ import MasterMindHD from "../pages/MasterMindHD";
 import EmbaixadoraHD from "../pages/EmbaixadoraHD";
 import Login from "../pages/Login";
 import AdminLinks from "../pages/AdminLinks";
+import Users from "../pages/Users";
 
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 
@@ -34,6 +35,15 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <Users />
           </ProtectedRoute>
         }
       />

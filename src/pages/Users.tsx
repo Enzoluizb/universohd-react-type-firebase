@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   subscribeToUsers,
-  updateUserRole,
   updateUserInfo,
   deleteUserById,
   createNewUser,
@@ -84,7 +84,6 @@ export default function Users() {
             <tr>
               <th className="p-4 text-sm font-medium text-gray-600">Nome</th>
               <th className="p-4 text-sm font-medium text-gray-600">Email</th>
-              <th className="p-4 text-sm font-medium text-gray-600">Role</th>
               <th className="p-4 text-sm font-medium text-gray-600">Ações</th>
             </tr>
           </thead>
@@ -97,29 +96,22 @@ export default function Users() {
                 <td className="p-4 text-gray-700">{user.name}</td>
                 <td className="p-4 text-gray-700">{user.email}</td>
                 <td className="p-4">
-                  <select
-                    value={user.role}
-                    onChange={(e) => updateUserRole(user.uid, e.target.value)}
-                    className="border rounded-md px-2 py-1 focus:ring-2 focus:ring-blue-500 outline-none"
-                  >
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                  </select>
-                </td>
-                <td className="p-4 flex gap-2">
-                  {/* ✅ Botão editar */}
-                  <button
-                    onClick={() => handleOpenEdit(user)}
-                    className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded-md transition"
-                  >
-                    ✏️
-                  </button>
-                  <button
-                    onClick={() => deleteUserById(user.uid)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition"
-                  >
-                    🗑
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleOpenEdit(user)}
+                      className="text-gray-500 hover:text-blue-600 transition"
+                      title="Editar"
+                    >
+                      <Pencil size={18} />
+                    </button>
+                    <button
+                      onClick={() => deleteUserById(user.uid)}
+                      className="text-gray-400 hover:text-red-600 transition"
+                      title="Excluir"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -173,7 +165,7 @@ export default function Users() {
         </div>
       )}
 
-      {/* ✅ Modal Editar */}
+      {/* Modal Editar */}
       {showEditModal && editUser && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
           <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">

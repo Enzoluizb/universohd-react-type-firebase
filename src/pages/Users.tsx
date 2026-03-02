@@ -11,6 +11,7 @@ import type { User } from "../services/userService";
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<string | null>(null);
 
   // Modal criar
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -24,6 +25,17 @@ export default function Users() {
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
 
+  // Modal confirmação genérico
+  const [confirmModal, setConfirmModal] = useState<{
+    message: string;
+    onConfirm: () => void;
+  } | null>(null);
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
+  };
+
   useEffect(() => {
     const unsubscribe = subscribeToUsers((usersData) => {
       setUsers(usersData);
@@ -32,13 +44,20 @@ export default function Users() {
     return () => unsubscribe();
   }, []);
 
-  const handleCreateUser = async () => {
+  const handleCreateUser = () => {
     if (!newEmail || !newPassword || !newName) return;
-    await createNewUser(newEmail, newPassword, newName);
-    setNewEmail("");
-    setNewPassword("");
-    setNewName("");
-    setShowCreateModal(false);
+    setConfirmModal({
+      message: `Deseja criar o usuário "${newName}"?`,
+      onConfirm: async () => {
+        await createNewUser(newEmail, newPassword, newName);
+        setNewEmail("");
+        setNewPassword("");
+        setNewName("");
+        setShowCreateModal(false);
+        setConfirmModal(null);
+        showToast("✅ Usuário criado com sucesso!");
+      },
+    });
   };
 
   const handleOpenEdit = (user: User) => {
@@ -48,11 +67,29 @@ export default function Users() {
     setShowEditModal(true);
   };
 
-  const handleEditUser = async () => {
+  const handleEditUser = () => {
     if (!editUser || !editName || !editEmail) return;
-    await updateUserInfo(editUser.uid, editName, editEmail);
-    setShowEditModal(false);
-    setEditUser(null);
+    setConfirmModal({
+      message: `Deseja salvar as alterações de "${editName}"?`,
+      onConfirm: async () => {
+        await updateUserInfo(editUser.uid, editName, editEmail);
+        setShowEditModal(false);
+        setEditUser(null);
+        setConfirmModal(null);
+        showToast("✅ Usuário atualizado com sucesso!");
+      },
+    });
+  };
+
+  const handleDeleteUser = (user: User) => {
+    setConfirmModal({
+      message: `Deseja excluir o usuário "${user.name}"? Esta ação não pode ser desfeita.`,
+      onConfirm: async () => {
+        await deleteUserById(user.uid);
+        setConfirmModal(null);
+        showToast("✅ Usuário excluído com sucesso!");
+      },
+    });
   };
 
   if (loading)
@@ -64,6 +101,13 @@ export default function Users() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
+      {/* Toast */}
+      {toast && (
+        <div className="fixed top-6 right-6 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg z-50 transition">
+          {toast}
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold text-gray-800">
@@ -105,7 +149,7 @@ export default function Users() {
                       <Pencil size={18} />
                     </button>
                     <button
-                      onClick={() => deleteUserById(user.uid)}
+                      onClick={() => handleDeleteUser(user)}
                       className="text-gray-400 hover:text-red-600 transition"
                       title="Excluir"
                     >
@@ -121,7 +165,7 @@ export default function Users() {
 
       {/* Modal Criar */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
           <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-gray-800">
               Novo Usuário
@@ -167,7 +211,7 @@ export default function Users() {
 
       {/* Modal Editar */}
       {showEditModal && editUser && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
           <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
             <h3 className="text-lg font-semibold text-gray-800">
               Editar Usuário
@@ -198,6 +242,32 @@ export default function Users() {
                 className="px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-white transition"
               >
                 Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Confirmação */}
+      {confirmModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Confirmar ação
+            </h3>
+            <p className="text-gray-600 text-sm">{confirmModal.message}</p>
+            <div className="flex justify-end gap-3 pt-2">
+              <button
+                onClick={() => setConfirmModal(null)}
+                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmModal.onConfirm}
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition"
+              >
+                Confirmar
               </button>
             </div>
           </div>

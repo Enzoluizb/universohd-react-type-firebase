@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
-import { Pencil, Trash2 } from "lucide-react";
-import {
-  subscribeToUsers,
-  updateUserInfo,
-  deleteUserById,
-  createNewUser,
-} from "../services/userService";
+import { subscribeToUsers, deleteUserById } from "../services/userService";
+
+import UsersTable from "../components/users/UsersTable";
+import UsersMobileCards from "../components/users/UsersMobileCards";
+import CreateUserModal from "../components/users/CreateUserModal";
+import EditUserModal from "../components/users/EditUserModal";
+import ConfirmModal from "../components/users/ConfirmModal";
+
 import type { User } from "../services/userService";
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [toast, setToast] = useState<string | null>(null);
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [newName, setNewName] = useState("");
-
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editUser, setEditUser] = useState<User | null>(null);
-  const [editName, setEditName] = useState("");
-  const [editEmail, setEditEmail] = useState("");
+
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const [confirmModal, setConfirmModal] = useState<{
     message: string;
@@ -34,286 +31,92 @@ export default function Users() {
   };
 
   useEffect(() => {
-    const unsubscribe = subscribeToUsers((usersData) => {
-      setUsers(usersData);
+    const unsubscribe = subscribeToUsers((data) => {
+      setUsers(data);
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
-  const handleCreateUser = () => {
-    if (!newEmail || !newPassword || !newName) return;
-
-    setConfirmModal({
-      message: `Deseja criar o usuário "${newName}"?`,
-      onConfirm: async () => {
-        await createNewUser(newEmail, newPassword, newName);
-        setNewEmail("");
-        setNewPassword("");
-        setNewName("");
-        setShowCreateModal(false);
-        setConfirmModal(null);
-        showToast("✅ Usuário criado com sucesso!");
-      },
-    });
-  };
-
-  const handleOpenEdit = (user: User) => {
-    setEditUser(user);
-    setEditName(user.name);
-    setEditEmail(user.email);
-    setShowEditModal(true);
-  };
-
-  const handleEditUser = () => {
-    if (!editUser || !editName || !editEmail) return;
-
-    setConfirmModal({
-      message: `Deseja salvar as alterações de "${editName}"?`,
-      onConfirm: async () => {
-        await updateUserInfo(editUser.uid, editName, editEmail);
-        setShowEditModal(false);
-        setEditUser(null);
-        setConfirmModal(null);
-        showToast("✅ Usuário atualizado com sucesso!");
-      },
-    });
-  };
-
   const handleDeleteUser = (user: User) => {
     setConfirmModal({
-      message: `Deseja excluir o usuário "${user.name}"? Esta ação não pode ser desfeita.`,
+      message: `Deseja excluir o usuário "${user.name}"?`,
       onConfirm: async () => {
         await deleteUserById(user.uid);
         setConfirmModal(null);
-        showToast("✅ Usuário excluído com sucesso!");
+        showToast("Usuário excluído com sucesso");
       },
     });
   };
 
-  if (loading)
+  const handleEditUser = (user: User) => {
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500 text-lg">Carregando...</p>
+        Carregando...
       </div>
     );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 px-4 md:p-10">
-      {/* Toast */}
       {toast && (
-        <div className="fixed top-6 right-6 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg z-50">
+        <div className="fixed top-6 right-6 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg">
           {toast}
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
+      <div className="flex justify-between mb-6">
+        <h2 className="text-xl md:text-2xl font-semibold">
           Painel de Usuários
         </h2>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
         >
           + Adicionar Usuário
         </button>
       </div>
 
-      {/* TABELA DESKTOP */}
-      <div className="hidden md:block bg-white rounded-xl shadow overflow-hidden">
-        <table className="w-full text-left">
-          <thead className="bg-gray-50 border-b">
-            <tr>
-              <th className="p-4 text-sm font-medium text-gray-600">Nome</th>
-              <th className="p-4 text-sm font-medium text-gray-600">Email</th>
-              <th className="p-4 text-sm font-medium text-gray-600">Ações</th>
-            </tr>
-          </thead>
+      <UsersTable
+        users={users}
+        onEdit={handleEditUser}
+        onDelete={handleDeleteUser}
+      />
 
-          <tbody>
-            {users.map((user) => (
-              <tr
-                key={user.uid}
-                className="border-b hover:bg-gray-50 transition"
-              >
-                <td className="p-4 text-gray-700">{user.name}</td>
-                <td className="p-4 text-gray-700">{user.email}</td>
+      <UsersMobileCards
+        users={users}
+        onEdit={handleEditUser}
+        onDelete={handleDeleteUser}
+      />
 
-                <td className="p-4">
-                  <div className="flex items-center gap-3">
-                    <button
-                      onClick={() => handleOpenEdit(user)}
-                      className="text-gray-500 hover:text-blue-600"
-                    >
-                      <Pencil size={18} />
-                    </button>
-
-                    <button
-                      onClick={() => handleDeleteUser(user)}
-                      className="text-gray-500 hover:text-red-600"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* CARDS MOBILE */}
-      <div className="md:hidden space-y-4">
-        {users.map((user) => (
-          <div
-            key={user.uid}
-            className="bg-white rounded-xl shadow p-4 flex justify-between items-start"
-          >
-            <div>
-              <p className="font-semibold text-gray-800">{user.name}</p>
-              <p className="text-sm text-gray-500">{user.email}</p>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => handleOpenEdit(user)}
-                className="text-blue-600 text-sm"
-              >
-                Editar
-              </button>
-
-              <button
-                onClick={() => handleDeleteUser(user)}
-                className="text-red-600 text-sm"
-              >
-                Excluir
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Modal Criar */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
-          <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Novo Usuário
-            </h3>
-
-            <input
-              type="text"
-              placeholder="Nome"
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-
-            <input
-              type="email"
-              placeholder="Email"
-              value={newEmail}
-              onChange={(e) => setNewEmail(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-
-            <input
-              type="password"
-              placeholder="Senha"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
-            />
-
-            <div className="flex justify-end gap-3 pt-2">
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={handleCreateUser}
-                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Criar
-              </button>
-            </div>
-          </div>
-        </div>
+        <CreateUserModal
+          onClose={() => setShowCreateModal(false)}
+          showToast={showToast}
+        />
       )}
 
-      {/* Modal Editar */}
-      {showEditModal && editUser && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
-          <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Editar Usuário
-            </h3>
-
-            <input
-              type="text"
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-yellow-400 outline-none"
-            />
-
-            <input
-              type="email"
-              value={editEmail}
-              onChange={(e) => setEditEmail(e.target.value)}
-              className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-yellow-400 outline-none"
-            />
-
-            <div className="flex justify-end gap-3 pt-2">
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={handleEditUser}
-                className="px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-white"
-              >
-                Salvar
-              </button>
-            </div>
-          </div>
-        </div>
+      {showEditModal && selectedUser && (
+        <EditUserModal
+          user={selectedUser}
+          onClose={() => setShowEditModal(false)}
+          showToast={showToast}
+        />
       )}
 
-      {/* Modal Confirmação */}
       {confirmModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white w-96 rounded-xl shadow-xl p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Confirmar ação
-            </h3>
-
-            <p className="text-gray-600 text-sm">{confirmModal.message}</p>
-
-            <div className="flex justify-end gap-3 pt-2">
-              <button
-                onClick={() => setConfirmModal(null)}
-                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={confirmModal.onConfirm}
-                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          message={confirmModal.message}
+          onConfirm={confirmModal.onConfirm}
+          onClose={() => setConfirmModal(null)}
+        />
       )}
     </div>
   );

@@ -13,19 +13,16 @@ export default function Users() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
 
-  // Modal criar
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newName, setNewName] = useState("");
 
-  // Modal editar
   const [showEditModal, setShowEditModal] = useState(false);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
 
-  // Modal confirmação genérico
   const [confirmModal, setConfirmModal] = useState<{
     message: string;
     onConfirm: () => void;
@@ -46,6 +43,7 @@ export default function Users() {
 
   const handleCreateUser = () => {
     if (!newEmail || !newPassword || !newName) return;
+
     setConfirmModal({
       message: `Deseja criar o usuário "${newName}"?`,
       onConfirm: async () => {
@@ -69,6 +67,7 @@ export default function Users() {
 
   const handleEditUser = () => {
     if (!editUser || !editName || !editEmail) return;
+
     setConfirmModal({
       message: `Deseja salvar as alterações de "${editName}"?`,
       onConfirm: async () => {
@@ -100,19 +99,20 @@ export default function Users() {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div className="min-h-screen bg-gray-100 px-4 md:p-10">
       {/* Toast */}
       {toast && (
-        <div className="fixed top-6 right-6 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg z-50 transition">
+        <div className="fixed top-6 right-6 bg-green-600 text-white px-5 py-3 rounded-xl shadow-lg z-50">
           {toast}
         </div>
       )}
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">
+        <h2 className="text-xl md:text-2xl font-semibold text-gray-800">
           Painel de Usuários
         </h2>
+
         <button
           onClick={() => setShowCreateModal(true)}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition"
@@ -121,8 +121,8 @@ export default function Users() {
         </button>
       </div>
 
-      {/* Tabela */}
-      <div className="bg-white rounded-xl shadow overflow-hidden">
+      {/* TABELA DESKTOP */}
+      <div className="hidden md:block bg-white rounded-xl shadow overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-gray-50 border-b">
             <tr>
@@ -131,6 +131,7 @@ export default function Users() {
               <th className="p-4 text-sm font-medium text-gray-600">Ações</th>
             </tr>
           </thead>
+
           <tbody>
             {users.map((user) => (
               <tr
@@ -139,19 +140,19 @@ export default function Users() {
               >
                 <td className="p-4 text-gray-700">{user.name}</td>
                 <td className="p-4 text-gray-700">{user.email}</td>
+
                 <td className="p-4">
                   <div className="flex items-center gap-3">
                     <button
                       onClick={() => handleOpenEdit(user)}
-                      className="text-gray-500 hover:text-blue-600 transition"
-                      title="Editar"
+                      className="text-gray-500 hover:text-blue-600"
                     >
                       <Pencil size={18} />
                     </button>
+
                     <button
                       onClick={() => handleDeleteUser(user)}
-                      className="text-gray-400 hover:text-red-600 transition"
-                      title="Excluir"
+                      className="text-gray-500 hover:text-red-600"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -163,6 +164,37 @@ export default function Users() {
         </table>
       </div>
 
+      {/* CARDS MOBILE */}
+      <div className="md:hidden space-y-4">
+        {users.map((user) => (
+          <div
+            key={user.uid}
+            className="bg-white rounded-xl shadow p-4 flex justify-between items-start"
+          >
+            <div>
+              <p className="font-semibold text-gray-800">{user.name}</p>
+              <p className="text-sm text-gray-500">{user.email}</p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <button
+                onClick={() => handleOpenEdit(user)}
+                className="text-blue-600 text-sm"
+              >
+                Editar
+              </button>
+
+              <button
+                onClick={() => handleDeleteUser(user)}
+                className="text-red-600 text-sm"
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Modal Criar */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-40">
@@ -170,6 +202,7 @@ export default function Users() {
             <h3 className="text-lg font-semibold text-gray-800">
               Novo Usuário
             </h3>
+
             <input
               type="text"
               placeholder="Nome"
@@ -177,6 +210,7 @@ export default function Users() {
               onChange={(e) => setNewName(e.target.value)}
               className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
+
             <input
               type="email"
               placeholder="Email"
@@ -184,6 +218,7 @@ export default function Users() {
               onChange={(e) => setNewEmail(e.target.value)}
               className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
+
             <input
               type="password"
               placeholder="Senha"
@@ -191,16 +226,18 @@ export default function Users() {
               onChange={(e) => setNewPassword(e.target.value)}
               className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
             />
+
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
               >
                 Cancelar
               </button>
+
               <button
                 onClick={handleCreateUser}
-                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition"
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Criar
               </button>
@@ -216,30 +253,32 @@ export default function Users() {
             <h3 className="text-lg font-semibold text-gray-800">
               Editar Usuário
             </h3>
+
             <input
               type="text"
-              placeholder="Nome"
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-yellow-400 outline-none"
             />
+
             <input
               type="email"
-              placeholder="Email"
               value={editEmail}
               onChange={(e) => setEditEmail(e.target.value)}
               className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-yellow-400 outline-none"
             />
+
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setShowEditModal(false)}
-                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
               >
                 Cancelar
               </button>
+
               <button
                 onClick={handleEditUser}
-                className="px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-white transition"
+                className="px-4 py-2 rounded-md bg-yellow-400 hover:bg-yellow-500 text-white"
               >
                 Salvar
               </button>
@@ -255,17 +294,20 @@ export default function Users() {
             <h3 className="text-lg font-semibold text-gray-800">
               Confirmar ação
             </h3>
+
             <p className="text-gray-600 text-sm">{confirmModal.message}</p>
+
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={() => setConfirmModal(null)}
-                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+                className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
               >
                 Cancelar
               </button>
+
               <button
                 onClick={confirmModal.onConfirm}
-                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition"
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Confirmar
               </button>

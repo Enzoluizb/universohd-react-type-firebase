@@ -57,7 +57,15 @@ export default function Navbar() {
             <>
               <span className="text-sm text-gray-700">
                 Bem-vinda, <strong>{user.name}</strong>{" "}
-                <span className="text-gray-400 font-normal text-xs">
+                <span
+                  className={`font-normal text-xs ${
+                    user.role === "embaixadora"
+                      ? "text-yellow-400"
+                      : user.role === "mastermind"
+                        ? "text-blue-500"
+                        : "text-gray-400"
+                  }`}
+                >
                   ({formatRole(user.role)})
                 </span>
               </span>

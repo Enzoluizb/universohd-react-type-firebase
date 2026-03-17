@@ -6,7 +6,7 @@ admin.initializeApp();
 setGlobalOptions({ maxInstances: 10 });
 
 export const createUser = onCall(async (request) => {
-    const { email, password, name } = request.data;
+    const { email, password, name, role } = request.data;
 
     if (!email || !password || !name) {
         throw new Error("Email, senha e nome são obrigatórios");
@@ -22,7 +22,7 @@ export const createUser = onCall(async (request) => {
         uid: userRecord.uid,
         email: userRecord.email,
         name,
-        role: "user",
+        role: role,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 

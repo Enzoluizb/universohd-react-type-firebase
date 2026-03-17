@@ -43,7 +43,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         uid: firebaseUser.uid,
         email: firebaseUser.email!,
         name: data?.name ?? "Usuário",
-        role: data?.role === "admin" ? "admin" : "user",
+        role: data?.role ?? "especialista",
       });
 
       setLoading(false);

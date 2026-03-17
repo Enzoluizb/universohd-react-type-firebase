@@ -10,8 +10,8 @@ export type CreateUserResult = {
 export async function createUserWithValidation(
     email: string,
     password: string,
-    name: string
-): Promise<CreateUserResult> {
+    name: string,
+    role: "admin" | "especialista" | "mastermind" | "embaixadora"): Promise<CreateUserResult> {
 
     if (!email.includes("@")) {
         return {
@@ -29,8 +29,7 @@ export async function createUserWithValidation(
 
     try {
 
-        await createNewUser(email, password, name);
-
+        await createNewUser(email, password, name, role);
         return { success: true };
 
     } catch (error) {

@@ -7,7 +7,7 @@ export interface User {
     uid: string;
     email: string;
     name: string;
-    role: string;
+    role: "admin" | "especialista" | "mastermind" | "embaixadora";
     createdAt?: Timestamp;
 }
 
@@ -21,7 +21,7 @@ export const subscribeToUsers = (callback: (users: User[]) => void) => {
     });
 };
 
-export const updateUserRole = async (uid: string, role: string) => {
+export const updateUserRole = async (uid: string, role: "admin" | "especialista" | "mastermind" | "embaixadora") => {
     const userRef = doc(db, "users", uid);
     await updateDoc(userRef, { role });
 };
@@ -36,7 +36,18 @@ export const deleteUserById = async (uid: string) => {
     await deleteUser({ uid });
 };
 
-export const createNewUser = async (email: string, password: string, name: string) => {
+export const createNewUser = async (
+    email: string,
+    password: string,
+    name: string,
+    role: "admin" | "especialista" | "mastermind" | "embaixadora"
+) => {
     const createUser = httpsCallable(functions, "createUser");
-    await createUser({ email, password, name });
+
+    await createUser({
+        email,
+        password,
+        name,
+        role,
+    });
 };

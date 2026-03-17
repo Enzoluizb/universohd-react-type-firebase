@@ -11,11 +11,14 @@ export default function CreateUserModal({ onClose, showToast }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [role, setRole] = useState<
+    "admin" | "especialista" | "mastermind" | "embaixadora"
+  >("especialista");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
   const handleCreate = async () => {
-    const result = await createUserWithValidation(email, password, name);
+    const result = await createUserWithValidation(email, password, name, role);
 
     if (!result.success) {
       setEmailError(result.emailError || "");
@@ -70,8 +73,31 @@ export default function CreateUserModal({ onClose, showToast }: Props) {
           )}
         </div>
 
+        <div>
+          <label className="text-sm text-gray-600">Tipo de usuário</label>
+
+          <select
+            value={role}
+            onChange={(e) =>
+              setRole(
+                e.target.value as
+                  | "admin"
+                  | "especialista"
+                  | "mastermind"
+                  | "embaixadora",
+              )
+            }
+            className="w-full border px-3 py-2 rounded-md mt-1"
+          >
+            <option value="especialista">Especialista</option>
+            <option value="mastermind">Master Mind</option>
+            <option value="embaixadora">Embaixadora</option>
+          </select>
+        </div>
+
         <div className="flex justify-end gap-3">
           <button onClick={onClose}>Cancelar</button>
+
           <button
             onClick={handleCreate}
             className="bg-blue-600 text-white px-4 py-2 rounded"

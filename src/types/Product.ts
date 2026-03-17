@@ -3,10 +3,7 @@ export type Product = {
   title: string;
   description: string;
   whatsapp: string;
-
-  imageUrl?: string; // legado
-  images?: string[];  // novo
-
+  images?: string[];
   active: boolean;
   createdAt: number;
   ownerId: string;

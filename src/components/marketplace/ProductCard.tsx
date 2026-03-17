@@ -43,14 +43,7 @@ export default function ProductCard({
     window.open(url, "_blank");
   }
 
-  const images =
-    product.images && product.images.length > 0
-      ? product.images
-      : product.imageUrl
-        ? [product.imageUrl]
-        : [];
-
-  //const images = product.images ?? [];
+  const images = product.images ?? [];
 
   function nextImage() {
     setCurrentImage((prev) => (prev + 1) % images.length);

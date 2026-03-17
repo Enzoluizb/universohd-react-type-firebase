@@ -41,7 +41,6 @@ export function useProducts() {
       title: data.title,
       description: data.description,
       whatsapp: data.whatsapp,
-      imageUrl: imageUrls[0] ?? "",
       images: imageUrls,
       active: true,
       createdAt: Date.now(),

@@ -12,13 +12,18 @@ type Props = {
 export default function EditProductModal({ product, onClose }: Props) {
   const { updateProduct } = useProducts();
 
-  // Estados do formulário - guardar os dados editáveis
   const [title, setTitle] = useState(product.title);
   const [description, setDescription] = useState(product.description || "");
   const [whatsapp, setWhatsapp] = useState("");
   const [whatsappRaw, setWhatsappRaw] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState(product.imageUrl || "");
+  const [imageFiles, setImageFiles] = useState<(File | null)[]>([
+    null,
+    null,
+    null,
+  ]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>(
+    product.images ?? [],
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -29,25 +34,32 @@ export default function EditProductModal({ product, onClose }: Props) {
     setWhatsappRaw(raw);
     setWhatsapp(formatWhatsapp(raw));
 
-    setImagePreview(product.imageUrl || "");
-    setImageFile(null);
+    setImagePreviews(product.images ?? []);
+    setImageFiles([null, null, null]);
   }, [product]);
 
   async function handleSave() {
     try {
       setLoading(true);
 
-      let imageUrl = product.imageUrl;
+      // Para cada slot: se tiver novo arquivo, faz upload; senão mantém a URL antiga
+      const updatedImages = await Promise.all(
+        [0, 1, 2].map(async (i) => {
+          if (imageFiles[i]) {
+            return await uploadImage(imageFiles[i]!);
+          }
+          return imagePreviews[i] ?? null;
+        }),
+      );
 
-      if (imageFile) {
-        imageUrl = await uploadImage(imageFile);
-      }
+      // Remove nulls (slots vazios)
+      const images = updatedImages.filter((url): url is string => !!url);
 
       await updateProduct(product.id!, {
         title,
         description,
         whatsapp: whatsappRaw,
-        imageUrl,
+        images,
       });
 
       onClose();
@@ -63,7 +75,6 @@ export default function EditProductModal({ product, onClose }: Props) {
       <div className="bg-white p-6 rounded w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Editar produto</h2>
 
-        {/* Título */}
         <input
           className="border p-2 w-full mb-3"
           placeholder="Título"
@@ -72,7 +83,6 @@ export default function EditProductModal({ product, onClose }: Props) {
           autoFocus
         />
 
-        {/* Descrição */}
         <textarea
           className="border p-2 w-full mb-3"
           placeholder="Descrição"
@@ -81,7 +91,6 @@ export default function EditProductModal({ product, onClose }: Props) {
           onChange={(e) => setDescription(e.target.value)}
         />
 
-        {/* WhatsApp */}
         <input
           type="tel"
           inputMode="numeric"
@@ -95,34 +104,44 @@ export default function EditProductModal({ product, onClose }: Props) {
           }}
         />
 
-        {/* Preview da imagem */}
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt={title}
-            className="w-full h-40 object-cover rounded mb-3"
-          />
-        )}
+        {/* 3 slots de imagem */}
+        {[0, 1, 2].map((index) => (
+          <div key={index} className="mb-3">
+            {imagePreviews[index] && (
+              <img
+                src={imagePreviews[index]}
+                alt={`Imagem ${index + 1}`}
+                className="w-full h-32 object-cover rounded mb-1"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                if (!file) return;
 
-        {/* Upload */}
-        <input
-          type="file"
-          accept="image/*"
-          className="mb-4"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
+                setImageFiles((prev) => {
+                  const copy = [...prev];
+                  copy[index] = file;
+                  return copy;
+                });
 
-            setImageFile(file);
-            setImagePreview(URL.createObjectURL(file));
-          }}
-        />
+                setImagePreviews((prev) => {
+                  const copy = [...prev];
+                  copy[index] = URL.createObjectURL(file);
+                  return copy;
+                });
+              }}
+            />
+          </div>
+        ))}
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 mt-2">
           <button
             onClick={onClose}
             disabled={loading}
-            className="bg-gray-400 text-white px-4 py-2 disabled:opacity-50"
+            className="bg-gray-400 text-white px-4 py-2 rounded disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -130,7 +149,7 @@ export default function EditProductModal({ product, onClose }: Props) {
           <button
             onClick={handleSave}
             disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 disabled:opacity-50"
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
           >
             {loading ? "Salvando..." : "Salvar"}
           </button>

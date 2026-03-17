@@ -74,7 +74,7 @@ export default function ProductCard({
                 (
                 {
                   {
-                    mastermind: "Master Mind HD",
+                    mastermind: "Master MindHD",
                     especialista: "Especialista HD",
                     embaixadora: "Embaixadora HD",
                   }[product.ownerRole]

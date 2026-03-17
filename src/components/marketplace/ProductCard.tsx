@@ -68,6 +68,27 @@ export default function ProductCard({
           <p className="text-xs text-gray-500 mb-0.5">Postado por</p>
           <p className="text-sm font-semibold text-black mb-2">
             {product.ownerName || "Usuário desconhecido"}
+            {product.ownerRole && product.ownerRole !== "admin" && (
+              <span
+                className={`font-normal text-xs ml-1 ${
+                  product.ownerRole === "embaixadora"
+                    ? "text-yellow-400"
+                    : product.ownerRole === "mastermind"
+                      ? "text-blue-500"
+                      : "text-gray-400"
+                }`}
+              >
+                (
+                {
+                  {
+                    mastermind: "Master Mind HD",
+                    especialista: "Especialista HD",
+                    embaixadora: "Embaixadora HD",
+                  }[product.ownerRole]
+                }
+                )
+              </span>
+            )}
           </p>
           {images.length > 0 ? (
             <div className="relative mb-3">

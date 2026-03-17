@@ -23,6 +23,16 @@ export default function Navbar() {
     setMenuOpen(false);
   }
 
+  function formatRole(role: string) {
+    const labels: Record<string, string> = {
+      especialista: "Especialista HD",
+      mastermind: "Master MindHD",
+      embaixadora: "Embaixadora HD",
+      admin: "Administrador",
+    };
+    return labels[role] ?? role;
+  }
+
   return (
     <nav className="w-full bg-gray-100 border-b">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 flex items-center justify-between h-24">
@@ -46,7 +56,10 @@ export default function Navbar() {
           {user ? (
             <>
               <span className="text-sm text-gray-700">
-                Bem-vindo, <strong>{user.name}</strong>
+                Bem-vinda, <strong>{user.name}</strong>{" "}
+                <span className="text-gray-400 font-normal text-xs">
+                  ({formatRole(user.role)})
+                </span>
               </span>
 
               <button
@@ -105,7 +118,10 @@ export default function Navbar() {
           {user ? (
             <>
               <span className="text-sm text-gray-700">
-                Bem-vindo, <strong>{user.name}</strong>
+                Bem-vinda, <strong>{user.name}</strong>{" "}
+                <span className="text-gray-400 font-normal text-xs">
+                  ({formatRole(user.role)})
+                </span>
               </span>
 
               <button

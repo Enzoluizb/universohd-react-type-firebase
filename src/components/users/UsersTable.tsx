@@ -54,9 +54,9 @@ export default function UsersTable({ users, onEdit, onDelete }: Props) {
                   }
                   className="border rounded px-2 py-1 text-sm"
                 >
-                  <option value="especialista">Especialista</option>
-                  <option value="mastermind">Master Mind</option>
-                  <option value="embaixadora">Embaixadora</option>
+                  <option value="especialista">Especialista HD</option>
+                  <option value="mastermind">Master MindHD</option>
+                  <option value="embaixadora">Embaixadora HD</option>
                 </select>
               </td>
 

@@ -8,37 +8,46 @@ import CreateProductModal from "../components/marketplace/CreateProductModal";
 import ProductCard from "../components/marketplace/ProductCard";
 import { useAuth } from "../hooks/useAuth";
 
+const ROLE_ORDER: Record<string, number> = {
+  embaixadora: 1,
+  mastermind: 2,
+  especialista: 3,
+};
+
 export default function Marketplace() {
   const { user } = useAuth();
   const { products, remove, toggleActive } = useProducts();
+
+  const sortedProducts = [...products].sort((a, b) => {
+    const orderA = ROLE_ORDER[a.ownerRole ?? ""] ?? 99;
+    const orderB = ROLE_ORDER[b.ownerRole ?? ""] ?? 99;
+    return orderA - orderB;
+  });
+
   const { displayedItems, currentPage, setCurrentPage, totalPages } =
-    usePagination(products, 8);
+    usePagination(sortedProducts, 8);
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-10">
-      {/* TÍTULO */}
       <h1 className="text-3xl font-bold text-black mb-3">
         Adquira as peças das Especialistas HD, Master Minds HD e Embaixadoras HD
         2026
       </h1>
 
-      {/* SUBTÍTULO */}
       <p className="text-gray-700 mb-2">
         Explore uma variedade de produtos artesanais únicos, criados com amor
         pelas nossas talentosas alunas. Seja parte deste universo de
         criatividade!
       </p>
 
-      {/* SUBTÍTULO EM VERMELHO */}
       <p className="text-red-600 font-semibold mb-6">
         *Especialistas HD, Master Minds HD e Embaixadoras HD — Atualmente ativas
         no Universo HD 2026
       </p>
 
-      {/* BOTÃO NOVA POSTAGEM */}
       {user && (
         <div className="mb-8">
           <button
@@ -50,7 +59,6 @@ export default function Marketplace() {
         </div>
       )}
 
-      {/* GRID DE POSTS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {displayedItems.map((product) => (
           <ProductCard
@@ -63,7 +71,6 @@ export default function Marketplace() {
         ))}
       </div>
 
-      {/* PAGINAÇÃO */}
       <div className="mt-6 flex items-center justify-center gap-3">
         <button
           onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
@@ -97,7 +104,6 @@ export default function Marketplace() {
         </button>
       </div>
 
-      {/* MODAIS */}
       {editingProduct && (
         <EditProductModal
           product={editingProduct}

@@ -11,4 +11,5 @@ export type Product = {
   createdAt: number;
   ownerId: string;
   ownerName: string;
+  ownerRole?: "especialista" | "mastermind" | "embaixadora" | "admin";
 };

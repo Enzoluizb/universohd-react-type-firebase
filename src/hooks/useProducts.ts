@@ -18,7 +18,6 @@ type CreateProductPostInput = {
   images?: (File | null)[];
 };
 
-
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const { user } = useAuth();
@@ -42,19 +41,14 @@ export function useProducts() {
       title: data.title,
       description: data.description,
       whatsapp: data.whatsapp,
-
-      // legado (compatibilidade)
       imageUrl: imageUrls[0] ?? "",
-
-      // novo
       images: imageUrls,
-
       active: true,
       createdAt: Date.now(),
       ownerId: user.uid,
       ownerName: user.name || "Usuário",
+      ownerRole: user.role,
     });
-
   }
 
   async function updateProduct(id: string, data: Partial<Product>) {

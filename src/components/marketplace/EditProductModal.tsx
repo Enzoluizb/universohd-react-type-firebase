@@ -42,17 +42,15 @@ export default function EditProductModal({ product, onClose }: Props) {
     try {
       setLoading(true);
 
-      // Para cada slot: se tiver novo arquivo, faz upload; senão mantém a URL antiga
       const updatedImages = await Promise.all(
         [0, 1, 2].map(async (i) => {
           if (imageFiles[i]) {
-            return await uploadImage(imageFiles[i]!);
+            return await uploadImage(imageFiles[i]!, product.id!); // 👈 passa o id
           }
           return imagePreviews[i] ?? null;
         }),
       );
 
-      // Remove nulls (slots vazios)
       const images = updatedImages.filter((url): url is string => !!url);
 
       await updateProduct(product.id!, {

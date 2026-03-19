@@ -1,10 +1,10 @@
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./storage";
 
-export async function uploadImage(file: File) {
+export async function uploadImage(file: File, productId: string) {
     const fileRef = ref(
         storage,
-        `products/${Date.now()}-${file.name}`
+        `products/${productId}/${Date.now()}-${file.name}`
     );
 
     await uploadBytes(fileRef, file);

@@ -7,6 +7,8 @@ import {
   editProduct,
 } from "../services/products";
 
+import { ref, push } from "firebase/database";
+import { database } from "../services/firebase";
 import { uploadImage } from "../services/uploadImage";
 import type { Product } from "../types/Product";
 import { useAuth } from "./useAuth";
@@ -25,13 +27,17 @@ export function useProducts() {
   async function createProductPost(data: CreateProductPostInput) {
     let imageUrls: string[] = [];
 
+    // gera o id antes do upload para usar como pasta no storage
+    const newProductRef = push(ref(database, "products"));
+    const productId = newProductRef.key!;
+
     if (data.images && data.images.length > 0) {
       const validImages = data.images.filter(
         (file): file is File => file instanceof File
       );
 
       imageUrls = await Promise.all(
-        validImages.map((file) => uploadImage(file))
+        validImages.map((file) => uploadImage(file, productId))
       );
     }
 
@@ -47,7 +53,7 @@ export function useProducts() {
       ownerId: user.uid,
       ownerName: user.name || "Usuário",
       ownerRole: user.role,
-    });
+    }, productId);
   }
 
   async function updateProduct(id: string, data: Partial<Product>) {

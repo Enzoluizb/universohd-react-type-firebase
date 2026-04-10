@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "react-realtime-crud-776f4"
-  }
+    "default": "react-realtime-crud-776f4",
+    "client": "universohd2026-943a3"
+  },
+  "targets": {},
+  "etags": {}
 }

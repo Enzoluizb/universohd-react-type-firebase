@@ -5,13 +5,13 @@ import { getDatabase } from "firebase/database";
 import { getFunctions } from "firebase/functions";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAKtoEOFuhnPW4qBijTsoSimyAhdJjFnCg",
-    authDomain: "react-realtime-crud-776f4.firebaseapp.com",
-    databaseURL: "https://react-realtime-crud-776f4-default-rtdb.firebaseio.com",
-    projectId: "react-realtime-crud-776f4",
-    storageBucket: "react-realtime-crud-776f4.firebasestorage.app",
-    messagingSenderId: "174007772022",
-    appId: "1:174007772022:web:4337f5b14cd163670e5057",
+    apiKey: "AIzaSyDe0Si3i-YrT_gvQPWZ59-PNK6rqKNBIaM",
+    authDomain: "universohd2026-943a3.firebaseapp.com",
+    projectId: "universohd2026-943a3",
+    storageBucket: "universohd2026-943a3.firebasestorage.app",
+    messagingSenderId: "22017449820",
+    appId: "1:22017449820:web:0363c492a8d16c0ce62b99",
+    databaseURL: "https://universohd2026-943a3-default-rtdb.firebaseio.com/"
 };
 
 export const app = initializeApp(firebaseConfig);

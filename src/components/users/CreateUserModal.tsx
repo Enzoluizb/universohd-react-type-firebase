@@ -89,9 +89,9 @@ export default function CreateUserModal({ onClose, showToast }: Props) {
             }
             className="w-full border px-3 py-2 rounded-md mt-1"
           >
-            <option value="especialista">Especialista</option>
-            <option value="mastermind">Master Mind</option>
-            <option value="embaixadora">Embaixadora</option>
+            <option value="especialista">Especialista HD</option>
+            <option value="mastermind">Master MindHD</option>
+            <option value="embaixadora">Embaixadora HD</option>
           </select>
         </div>
 

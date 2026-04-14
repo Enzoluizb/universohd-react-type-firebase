@@ -36,9 +36,7 @@ export default function ProductCard({
     if (!product.whatsapp) return;
 
     const message = `Olá, vi seu produto "${product.title}" no Site do UniversoHD e gostaria de saber mais informações.`;
-    const url = `https://wa.me/${product.whatsapp}?text=${encodeURIComponent(
-      message,
-    )}`;
+    const url = `https://wa.me/55${product.whatsapp}?text=${encodeURIComponent(message)}`;
 
     window.open(url, "_blank");
   }

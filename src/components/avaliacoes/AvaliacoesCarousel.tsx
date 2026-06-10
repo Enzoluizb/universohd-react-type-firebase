@@ -75,7 +75,7 @@ const avaliacoes = [
   {
     nome: "@claudia_albano_atelie_criativo – Embaixadora HD 2026",
     texto:
-      "Estar no Universo HD é ter uma nova perspectiva de vida e negócio! É enxergar oportunidades, renovar-se a cada dia, entender o propósito e alcançar objetivos!",
+      "Estar no Universo HD é ter uma nova perspectiva de vida e negócio, é enxergar oportunidades, renovar-se a cada dia, entender o propósito e alcançar objetivos!",
   },
   {
     nome: "@solsantosartefatto – Embaixadora HD sênior 2026",

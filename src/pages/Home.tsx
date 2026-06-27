@@ -1,4 +1,5 @@
 import Hero from "../components/landing/Hero";
+import BookSection from "../components/landing/BookSection";
 import AboutSection from "../components/landing/AboutSection";
 import CleanHDSection from "../components/landing/CleanHDSection";
 import CoursesSection from "../components/landing/CoursesSection";
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <BookSection />
       <AboutSection />
       <CleanHDSection />
       <CoursesSection />

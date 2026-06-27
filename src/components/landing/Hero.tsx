@@ -36,7 +36,7 @@ export default function Hero() {
                 Alunas em desenvolvimento
               </dt>
               <dd className="text-2xl font-bold leading-9 tracking-tight text-amber-400 drop-shadow-md">
-                +500
+                +550
               </dd>
             </div>
           </dl>
